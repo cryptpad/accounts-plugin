@@ -1,0 +1,34 @@
+{
+    "free": {
+        "quota": 1,
+        "price": 0,
+        "drives": 1
+    },
+    "basic": {
+        "quota": 5,
+        "price": 5,
+        "drives": 1
+    },
+    "pro": {
+        "quota": 25,
+        "price": 10,
+        "drives": 2
+    },
+    "power": {
+        "quota": 75,
+        "price": 15,
+        "drives": 6
+    },
+    "org_s": {
+        "quota": 100,
+        "price": 50,
+        "drives": 25,
+        "org": true
+    },
+    "org_large": {
+        "quota": 150,
+        "price": 100,
+        "drives": 100,
+        "org": true
+    }
+}
