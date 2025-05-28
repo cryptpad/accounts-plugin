@@ -1,0 +1,65 @@
+@import (reference) '../../customize/src/less2/include/framework.less';
+@import (reference) '../../customize/src/less2/include/sidebar-layout.less';
+@import (reference) '../../customize/src/less2/include/avatar.less';
+@import (reference) "../../customize/src/less2/include/limit-bar.less";
+
+&.cp-app-accounts {
+    .limit-bar_main();
+
+    .framework_min_main(
+        @bg-color: @colortheme_static_apps[default];
+    );
+    .sidebar-layout_main();
+
+    .cp-hidden {
+        display: none !important;
+    }
+
+    display: flex;
+    flex-flow: column;
+    background-color: @cp_loading-bg;
+
+    @plan_basic: @cp_accounts-basic;
+    @plan_pro: @cp_accounts-pro;
+    @plan_power: @cp_accounts-power;
+    @active-color: @cp_accounts-active;
+    @inactive-color: @cp_accounts-inactive;
+
+
+    #cp-app-accounts-container {
+        flex: 1;
+        overflow: auto;
+        display: flex;
+        align-items: center;
+        flex-flow: column;
+        color: @cryptpad_text_col !important;
+
+        & > div {
+            display: flex;
+            flex-flow: column;
+            align-self: center;
+            max-width: 1100px;
+        }
+
+        .cp-accounts-header {
+            display: flex;
+            justify-content: space-evenly;
+            .cp-accounts-header-item {
+                display: flex;
+                flex-flow: column;
+                max-width: 200px;
+                align-items: center;
+                & > i {
+                    font-size: 72px;
+                }
+                & > span {
+                    margin-top: 10px;
+                    font-family: "IBM Plex Mono";
+                    text-align: center;
+                }
+            }
+            margin-bottom: 40px;
+        }
+    }
+}
+

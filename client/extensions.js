@@ -25,15 +25,8 @@ define([
             }
         }];
         extensions.POST_REGISTER = [{
-            getContent: (utils) => {
-                const { h } = utils;
-                const plans = Plans.getPlansRegister(MyMessages);
-                const content = h('div.row', [
-                    h('div.col-md-12', [
-                        plans
-                    ])
-                ]);
-                return content;
+            getContent: () => {
+                return Plans.getPlansRegister(MyMessages);
             }
         }];
 

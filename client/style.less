@@ -7,11 +7,16 @@ body {
     @basic: contrast(@cp_loading-bg, #99cfff, darken(#99cfff, 30%));
     @pro: contrast(@cp_loading-bg, #affdc2, darken(#afddc2, 30%));
     @power: contrast(@cp_loading-bg, #e4caff, darken(#e4caff, 30%));
+    @org_s: contrast(@cp_loading-bg, #ffd4d4, darken(#ffd4d4, 30%));
+    @org_l: contrast(@cp_loading-bg, #ffdeca, darken(#ffdeca, 30%));
     @plans: {
         free: @cryptpad_text_col;
+        cloud: @cryptpad_text_col;
         basic: @basic;
         pro: @pro;
         power: @power;
+        org_s: @org_s;
+        org_large: @org_l;
     }
 
 
@@ -23,6 +28,7 @@ body {
             flex-basis: 100%;
             display: flex;
             gap: 10px;
+            margin-bottom: 10px;
             .cp-accounts-toggle {
                 flex: 1 1 0px;
                 display: flex;
@@ -59,6 +65,17 @@ body {
                 }
             }
         }
+        .cp-accounts-org-title {
+            flex-basis: 100%;
+            display: flex;
+            justify-content: center;
+            font-family: "IBM Plex Mono";
+            font-size: 36px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+
+
+        }
     }
     .cp-accounts-card {
         each(@plans, {
@@ -81,11 +98,16 @@ body {
         border-radius: 10px;
         padding: 10px;
 
+        &[data-org="true"] {
+            width: 300px;
+        }
+
         .cp-accounts-card-name, .cp-price-value {
             font-family: "IBM Plex Mono";
         }
         .cp-accounts-card-name {
             font-size: 36px;
+            text-align: center;
         }
         .cp-accounts-card-price {
             display: flex;
@@ -101,7 +123,8 @@ body {
             }
         }
         .cp-accounts-card-desc {
-            margin-top: 10px;
+            margin-top: 20px;
+            width: 100%;
         }
         .cp-accounts-card-button {
             display: flex;

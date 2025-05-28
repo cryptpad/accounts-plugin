@@ -4,8 +4,9 @@ define([
     '/common/common-interface.js',
     '/common/common-util.js',
     '/customize/application_config.js',
+    '/customize/messages.js',
     'json!/accounts/plans.json'
-], ($, h, UI, Util, AppConfig, PlansJSON) => {
+], ($, h, UI, Util, AppConfig, Messages, PlansJSON) => {
     const Plans = {};
     let MyMessages = {};
 
@@ -58,27 +59,69 @@ define([
         return content;
     };
 
+    const makeOrgTitle = () => {
+        // XXX
+        MyMessages.org_title = "Organization plans";
+        return h('div.cp-accounts-org-title',
+            h('span', MyMessages.org_title)
+        );
+    };
+
+    const makeHeader = () => {
+        // XXX
+        MyMessages.header_drive = "Flexible storage with user and team drives";
+        MyMessages.header_quota = "Up to 150MB file uploads";
+        MyMessages.header_support = "Priority Support in English & French";
+        MyMessages.header_privacy = "Support privacy and alternatives to Big Tech";
+
+
+        return h('div.cp-accounts-header', [
+            h('div.cp-accounts-header-item', [
+                h('i.fa.fa-hdd-o'),
+                h('span', MyMessages.header_drive)
+            ]),
+            h('div.cp-accounts-header-item', [
+                h('i.fa.fa-upload'),
+                h('span', MyMessages.header_quota)
+            ]),
+            h('div.cp-accounts-header-item', [
+                h('i.fa.fa-life-ring'),
+                h('span', MyMessages.header_support)
+            ]),
+            h('div.cp-accounts-header-item', [
+                h('i.fa.fa-trophy'),
+                h('span', MyMessages.header_privacy)
+            ]),
+        ]);
+    };
+
     const makeCard = (plan, isRegister) => {
         // XXX
         MyMessages.freetitle = "Free"; // XXX
+        MyMessages.cloudtitle = "CryptPad Cloud"; // XXX
         MyMessages.plan_quota = "<strong>{0}GB</strong> of storage";
         MyMessages.plan_drive = "<strong>1</strong> Drive"
         MyMessages.plan_drives = "<strong>{0}</strong> Drives (user or team)";
         MyMessages.plan_support = "Priority support ({0})";
         MyMessages.free_support = "Some support ({0})";
         MyMessages.perMonthVAT = "per month (ex. VAT)";
-        MyMessages.paidYearly = "as {0}€ yearly paid";
+        MyMessages.paidYearly = "as <strong>{0}€</strong> yearly paid";
 
         MyMessages.noPlan = "Continue for free";
+        MyMessages.tryCloud = "Test CryptPad Cloud";
+        MyMessages.cloud_feature1 = "Fully managed or Support on your terms";
+        MyMessages.cloud_feature2 = "Quarterly updates";
+        MyMessages.cloud_feature3 = "Customization features";
+        MyMessages.cloud_feature4 = "Administrator support";
 
         const data = PlansJSON[plan];
         if (!data) { return; }
 
         // Plan name
-        let nameKey = data.org
+        let nameKey = (data.org && !data.cloud)
             ? MyMessages._getKey('orgtitle', [data.drives])
             : MyMessages[`${plan}title`] || plan;
-        const name = prettyName(nameKey);
+        const name = data.cloud ? nameKey : prettyName(nameKey);
 
         // Price
         const priceYear = data.org ? 10*data.price
@@ -93,6 +136,12 @@ define([
         const $price = $(price);
         const $priceY = $(priceY);
         const setPrice = isYearly => {
+            if (data.cloud) {
+                $price.hide();
+                $priceY.hide();
+
+            }
+
             let p = isYearly ? Math.round(100*priceYear / 12) / 100
                              : data.price
             let cent;
@@ -134,12 +183,22 @@ define([
         }
 
         // Buttons
+        const freeTxt = !isRegister ? Messages.register_header
+                                   : MyMessages.noPlan;
         const mainBtn = h('button.btn.btn-default.cp-colored', [
-            data.price ? MyMessages.pickPlan : MyMessages.noPlan
+            data.price ? MyMessages.pickPlan : (
+                data.cloud ? MyMessages.tryCloud : freeTxt
+            )
         ]);
+        const altBtn = (plan === "free" && !isRegister)
+                ? h('button.btn.btn-secondary', MyMessages.buttons_donate)
+                : undefined;
 
         Util.onClickEnter($(mainBtn), () => {
-            if (!data.price) {
+            if (data.cloud) { // Contact
+                // TODO XXX redirect
+            }
+            if (!data.price) { // Free plan
                 if (isRegister) {
                     window.location.href = '/drive';
                 } else {
@@ -151,7 +210,19 @@ define([
             // XXX on plan picked, go to stripe
         });
 
+        const desc = data.cloud ? [
+            h('div.cp-accounts-desc-entry',MyMessages.cloud_feature1),
+            h('div.cp-accounts-desc-entry',MyMessages.cloud_feature2),
+            h('div.cp-accounts-desc-entry',MyMessages.cloud_feature3),
+            h('div.cp-accounts-desc-entry',MyMessages.cloud_feature4)
+        ] : [
+            UI.setHTML(h('div.cp-accounts-desc-entry'), quota),
+            UI.setHTML(h('div.cp-accounts-desc-entry'), drive),
+            UI.setHTML(h('div.cp-accounts-desc-entry'), support)
+        ];
+
         return h('div.cp-accounts-card', {
+            'data-org': String(!!data.org),
             'data-plan': plan
         }, [
             h('div.cp-accounts-card-name.cp-colored', name),
@@ -160,20 +231,17 @@ define([
                 priceM,
                 priceY
             ]),
-            h('div.cp-accounts-card-desc', [
-                UI.setHTML(h('div.cp-accounts-desc-entry'), quota),
-                UI.setHTML(h('div.cp-accounts-desc-entry'), drive),
-                UI.setHTML(h('div.cp-accounts-desc-entry'), support)
-            ]),
+            h('div.cp-accounts-card-desc', desc),
             h('div.cp-accounts-card-button', [
-                mainBtn
+                mainBtn,
+                altBtn
             ]),
         ]);
     };
 
     const listPlans = (org, isRegister) => {
         return h('div.cp-accounts-list', [
-            makeToggle(),
+            org ? makeOrgTitle() : makeToggle(),
             Object.keys(PlansJSON)
             .filter(k => (!!PlansJSON[k].org === org))
             .map(k => {
@@ -189,6 +257,11 @@ define([
     };
     Plans.getPlansAccounts = (_MyMessages) => {
         MyMessages = _MyMessages;
+        return h('div', [
+            makeHeader(),
+            listPlans(false, false),
+            listPlans(true, false),
+        ]);
     };
 
     return Plans;
