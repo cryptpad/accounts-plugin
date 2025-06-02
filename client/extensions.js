@@ -25,8 +25,8 @@ define([
             }
         }];
         extensions.POST_REGISTER = [{
-            getContent: () => {
-                return Plans.getPlansRegister(MyMessages);
+            getContent: (keys) => {
+                return Plans.getPlansRegister(MyMessages, keys);
             }
         }];
 

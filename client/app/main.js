@@ -17,8 +17,9 @@ define([
     }).nThen(function (/*waitFor*/) {
         var addRpc = function (sframeChan, Cryptpad/*, Utils*/) {
             sframeChan.on('ACCOUNTS_GET_KEYS', function (data, cb) {
-                Cryptpad.getUserObject(null, function (obj) {
-                    cb(obj);
+                Cryptpad.getAccessKeys(function (obj) {
+                    if (!Array.isArray(obj) || !obj.length) { return void cb(); }
+                    cb(obj.find(data => { return !data.id; }));
                 });
             });
             sframeChan.on('Q_UPDATE_LIMIT', function (data, cb) {
@@ -36,6 +37,7 @@ define([
             if (category) { obj.category = category; }
         };
         SFCommonO.start({
+            requires: 'drive',
             noRealtime: true,
             addRpc: addRpc,
             addData: addData

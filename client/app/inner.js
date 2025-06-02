@@ -10,7 +10,7 @@ define([
     '/common/common-util.js',
     '/common/common-hash.js',
     '/customize/messages.js',
-    '/accounts/app/messages.js',
+    '/common/extensions.js',
     '/accounts/plans.js',
 
     'css!/components/bootstrap/dist/css/bootstrap.min.css',
@@ -28,7 +28,7 @@ define([
     Util,
     Hash,
     MessagesCP,
-    Messages,
+    Extensions,
     Plans
     )
 {
@@ -40,10 +40,19 @@ define([
 
     var common;
 
-    const andThen = () => {
+    let Messages = {};
+    // Get translations from plugin
+    Extensions.getExtensionsSync('TRANSLATIONS').forEach(ext => {
+        try {
+            let m = ext.get('accounts');
+            if (m) { Messages = m; }
+        } catch (e) {}
+    });
+
+    const andThen = (keys) => {
         const $container = $('#cp-app-accounts-container');
 
-        let content = Plans.getPlansAccounts(Messages);
+        let content = Plans.getPlansAccounts(Messages, keys, common);
 
         $container.append(content);
 
@@ -89,14 +98,14 @@ define([
             return void UI.removeLoadingScreen();
         }
 
-        sFrameChan.query('ACCOUNTS_GET_KEYS', null, function (err, res) {
+        sFrameChan.query('ACCOUNTS_GET_KEYS', null, function (err, keys) {
             if (err) {
                 console.error(err);
                 return void UI.removeLoadingScreen();
             }
             // XXX render page
             UI.removeLoadingScreen();
-            andThen();
+            andThen(keys);
             /*
             Auth.auth(res, function (err) {
                 if (err) { console.error(err); }

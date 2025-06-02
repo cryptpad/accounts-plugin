@@ -1,14 +1,19 @@
 define([
     'jquery',
+    '/api/config',
     '/common/hyperscript.js',
     '/common/common-interface.js',
     '/common/common-util.js',
     '/customize/application_config.js',
     '/customize/messages.js',
+    '/accounts/api.js',
     'json!/accounts/plans.json'
-], ($, h, UI, Util, AppConfig, Messages, PlansJSON) => {
+], ($, ApiConfig, h, UI, Util,
+    AppConfig, Messages, Api, PlansJSON) => {
     const Plans = {};
     let MyMessages = {};
+
+    let sfCommon;
 
     // Support languages
     let lang = "EN";
@@ -60,21 +65,12 @@ define([
     };
 
     const makeOrgTitle = () => {
-        // XXX
-        MyMessages.org_title = "Organization plans";
         return h('div.cp-accounts-org-title',
             h('span', MyMessages.org_title)
         );
     };
 
     const makeHeader = () => {
-        // XXX
-        MyMessages.header_drive = "Flexible storage with user and team drives";
-        MyMessages.header_quota = "Up to 150MB file uploads";
-        MyMessages.header_support = "Priority Support in English & French";
-        MyMessages.header_privacy = "Support privacy and alternatives to Big Tech";
-
-
         return h('div.cp-accounts-header', [
             h('div.cp-accounts-header-item', [
                 h('i.fa.fa-hdd-o'),
@@ -95,25 +91,22 @@ define([
         ]);
     };
 
+    const onPlanPicked = (plan, isRegister) => {
+        const url = new URL(isRegister ? '/drive' : '/accounts',
+                            ApiConfig.httpUnsafeOrigin).href;
+        Api.subscribe(plan, url, (err, url) => {
+            if (err || !url) {
+                console.error(err || 'NO_CHECKOUT_URL');
+                return void UI.warn(Messages.error);
+            }
+            if (isRegister) {
+                window.location.href = url?.permalink;
+            } else if (sfCommon) {
+                sfCommon.gotoURL(url?.permalink);
+            }
+        });
+    };
     const makeCard = (plan, isRegister) => {
-        // XXX
-        MyMessages.freetitle = "Free"; // XXX
-        MyMessages.cloudtitle = "CryptPad Cloud"; // XXX
-        MyMessages.plan_quota = "<strong>{0}GB</strong> of storage";
-        MyMessages.plan_drive = "<strong>1</strong> Drive"
-        MyMessages.plan_drives = "<strong>{0}</strong> Drives (user or team)";
-        MyMessages.plan_support = "Priority support ({0})";
-        MyMessages.free_support = "Some support ({0})";
-        MyMessages.perMonthVAT = "per month (ex. VAT)";
-        MyMessages.paidYearly = "as <strong>{0}€</strong> yearly paid";
-
-        MyMessages.noPlan = "Continue for free";
-        MyMessages.tryCloud = "Test CryptPad Cloud";
-        MyMessages.cloud_feature1 = "Fully managed or Support on your terms";
-        MyMessages.cloud_feature2 = "Quarterly updates";
-        MyMessages.cloud_feature3 = "Customization features";
-        MyMessages.cloud_feature4 = "Administrator support";
-
         const data = PlansJSON[plan];
         if (!data) { return; }
 
@@ -162,17 +155,19 @@ define([
             }
         };
 
+        let yearly = true;
         onYearlyChange.reg(isYearly => {
+            yearly = isYearly;
             setPrice(isYearly);
         });
         setPrice(true);
 
         // Quota
-        const quota = MyMessages._getKey('plan_quota', [data.quota]);
+        const quota = MyMessages._getKey('plan_quota', [data.quota || 0]);
         // Drives
         let drive = MyMessages.plan_drive;
         if (data.drives > 1) {
-            drive = MyMessages._getKey('plan_drives', [data.drives]);
+            drive = MyMessages._getKey('plan_drives', [data.drives || 0]);
         }
         // Support
         let support;
@@ -207,7 +202,9 @@ define([
                 return;
             }
 
-            // XXX on plan picked, go to stripe
+            const yearlyTxt = yearly ? '12' : '';
+            const subPlan = `${plan}${yearlyTxt}`;
+            onPlanPicked(subPlan, isRegister);
         });
 
         const desc = data.cloud ? [
@@ -251,11 +248,14 @@ define([
         ]);
     };
 
-    Plans.getPlansRegister = (_MyMessages) => {
+    Plans.getPlansRegister = (_MyMessages, keys) => {
+        Api._setKeys(keys);
         MyMessages = _MyMessages;
         return listPlans(false, true);
     };
-    Plans.getPlansAccounts = (_MyMessages) => {
+    Plans.getPlansAccounts = (_MyMessages, keys, common) => {
+        sfCommon = common;
+        Api._setKeys(keys);
         MyMessages = _MyMessages;
         return h('div', [
             makeHeader(),
