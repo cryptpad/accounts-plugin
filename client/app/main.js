@@ -19,7 +19,8 @@ define([
             sframeChan.on('ACCOUNTS_GET_KEYS', function (data, cb) {
                 Cryptpad.getAccessKeys(function (obj) {
                     if (!Array.isArray(obj) || !obj.length) { return void cb(); }
-                    cb(obj.find(data => { return !data.id; }));
+                    const keys = obj.find(data => { return !data.id; });
+                    keys.userName = localStorage.User_name;
                 });
             });
             sframeChan.on('Q_UPDATE_LIMIT', function (data, cb) {

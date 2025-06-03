@@ -18,6 +18,7 @@ const factory = (Util, Commands) => {
         post({
             command: 'SUBSCRIBE',
             redirectURL,
+            user: keys.userName,
             plan
         }, (err, ret) => {
             if (err) { return void cb(err); }

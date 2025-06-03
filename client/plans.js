@@ -91,6 +91,12 @@ define([
         ]);
     };
 
+    const gotoURL = url => {
+        if (sfCommon) {
+            return sfCommon.gotoURL(url);
+        }
+        window.location.href = url;
+    };
     const onPlanPicked = (plan, isRegister) => {
         const url = new URL(isRegister ? '/drive' : '/accounts',
                             ApiConfig.httpUnsafeOrigin).href;
@@ -99,11 +105,8 @@ define([
                 console.error(err || 'NO_CHECKOUT_URL');
                 return void UI.warn(Messages.error);
             }
-            if (isRegister) {
-                window.location.href = url?.permalink;
-            } else if (sfCommon) {
-                sfCommon.gotoURL(url?.permalink);
-            }
+            console.error(err, url);
+            gotoURL(url?.permalink);
         });
     };
     const makeCard = (plan, isRegister) => {
@@ -117,26 +120,26 @@ define([
         const name = data.cloud ? nameKey : prettyName(nameKey);
 
         // Price
-        const priceYear = data.org ? 10*data.price
-                                : 11*data.price;
+        const priceYear = data.yearly;
         const perMonth = MyMessages.perMonthVAT;
         const perYear = MyMessages._getKey('paidYearly', [priceYear]);
 
+        const paid = data.monthly || data.yearly;
         const price = h('div.cp-price-value.cp-colored');
         const priceY = UI.setHTML(h('div.cp-price-month'), '&nbsp;');
         const priceM = UI.setHTML(h('div.cp-price-month'),
-                    data.price ?  perMonth : '&nbsp;');
+                    paid ?  perMonth : '&nbsp;');
         const $price = $(price);
         const $priceY = $(priceY);
         const setPrice = isYearly => {
+            isYearly = (isYearly && data.yearly) || (!isYearly && !data.monthly);
             if (data.cloud) {
                 $price.hide();
                 $priceY.hide();
-
             }
 
             let p = isYearly ? Math.round(100*priceYear / 12) / 100
-                             : data.price
+                             : data.monthly
             let cent;
             if (String(p).includes('.')) {
                 const s = String(p).split('.');
@@ -150,7 +153,7 @@ define([
             }
             if (!isYearly) {
                 $priceY.html('&nbsp;');
-            } else if (data.price) {
+            } else if (paid) {
                 $priceY.html(perYear);
             }
         };
@@ -193,13 +196,8 @@ define([
             if (data.cloud) { // Contact
                 // TODO XXX redirect
             }
-            if (!data.price) { // Free plan
-                if (isRegister) {
-                    window.location.href = '/drive';
-                } else {
-                    window.location.href = '/register';
-                }
-                return;
+            if (!data.monthly && !data.yearly) { // Free plan
+                return gotoURL(isRegister ? '/drive' : '/register');
             }
 
             const yearlyTxt = yearly ? '12' : '';
