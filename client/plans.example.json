@@ -5,30 +5,40 @@
         "drives": 1
     },
     "basic": {
+        "stripe_id": "",
         "quota": 5,
         "price": 5,
+        "yearly": true,
         "drives": 1
     },
     "pro": {
+        "stripe_id": "",
         "quota": 25,
         "price": 10,
+        "yearly": true,
         "drives": 2
     },
     "power": {
+        "stripe_id": "",
         "quota": 75,
         "price": 15,
+        "yearly": true,
         "drives": 6
     },
     "org_s": {
+        "stripe_id": "",
         "quota": 100,
         "price": 50,
         "drives": 25,
+        "yearly": true,
         "org": true
     },
     "org_large": {
+        "stripe_id": "",
         "quota": 150,
         "price": 100,
         "drives": 100,
+        "yearly": true,
         "org": true
     },
     "cloud": {
