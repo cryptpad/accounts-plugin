@@ -21,6 +21,7 @@ define([
                     if (!Array.isArray(obj) || !obj.length) { return void cb(); }
                     const keys = obj.find(data => { return !data.id; });
                     keys.userName = localStorage.User_name;
+                    cb(keys);
                 });
             });
             sframeChan.on('Q_UPDATE_LIMIT', function (data, cb) {
