@@ -1,2 +1,3 @@
 *.swp
-client/plans.json
+config/plans.json
+config/config.json
