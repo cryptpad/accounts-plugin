@@ -1,3 +1,5 @@
 {
-    "accountsOrigin": "https://example.com"
+    "accountsOrigin": "https://example.tld",
+    "cryptpadDomain": "example.tld",
+    "cryptpadSubdomain": "cryptpad.example.tld"
 }

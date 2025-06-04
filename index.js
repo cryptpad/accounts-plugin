@@ -1,10 +1,10 @@
-const ACCOUNTS = {};
+const Accounts = {};
 const Express = require("express");
 const Path = require("node:path");
 const fs = require("fs");
 const config = require('./config/config.json');
 
-ACCOUNTS.addHttpEndpoints = (Env, app) => {
+Accounts.addHttpEndpoints = (Env, app) => {
     let dir = Path.join(__dirname, 'client');
     let json = Path.join(__dirname, 'config', 'plans.json');
     app.get('/accounts/plans.json', (req, res) => {
@@ -13,11 +13,13 @@ ACCOUNTS.addHttpEndpoints = (Env, app) => {
     app.use('/accounts', Express.static(dir));
 };
 
-ACCOUNTS.getConfig = () => {
-    return config;
+Accounts.customizeEnv = Env => {
+    Env.accounts_api = config?.accountsOrigin;
+    Env.myDomain = config.cryptpadDomain;
+    Env.mySubdomain = config.cryptpadSubdomain;
 };
 
 module.exports = {
   name: "ACCOUNTS",
-  modules: ACCOUNTS
+  modules: Accounts
 };
