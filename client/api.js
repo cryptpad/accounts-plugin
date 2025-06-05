@@ -40,6 +40,15 @@ const factory = (Util, Commands) => {
         });
     };
 
+    Api.checkSession = (cb) => {
+        post({
+            command: 'CHECK_SESSION',
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+
     return Api;
 };
 

@@ -36,7 +36,7 @@ define([
             window.location.hash = '';
         }
         var addData = function (obj) {
-            if (category) { obj.category = category; }
+            if (category) { obj.category = category; }
         };
         SFCommonO.start({
             requires: 'drive',

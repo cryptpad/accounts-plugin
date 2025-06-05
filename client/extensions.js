@@ -19,7 +19,8 @@ define([
         }];
         extensions.POST_REGISTER = [{
             getContent: (keys) => {
-                return Plans.getPlansRegister(MyMessages, keys);
+                Plans.init(MyMessages, keys, void 0);
+                return Plans.getPlansRegister();
             }
         }];
 
@@ -188,6 +189,24 @@ define([
                     ]),
                 ])
             }
+        }];
+
+        extensions.INIT_LOG = [{
+            getContent: (sframeChan, priv, keys, cb) => {
+                if (!priv.safeHash) { return void cb(); }
+                Plans.init(MyMessages, keys);
+                Plans.checkSession((err, val) => {
+                    cb();
+                    if (err || !val) {
+                        const str = `${MyMessages.processing_error} ${MyMessages.processing_error_details}`;
+                        sframeChan.event('EV_ALERTIFY_WARN', str);
+                        return;
+                    }
+                    const str = MyMessages.processing_success;
+                    sframeChan.event('EV_ALERTIFY_LOG', str);
+                });
+            }
+
         }];
 
         return extensions;

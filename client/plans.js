@@ -246,15 +246,19 @@ define([
         ]);
     };
 
-    Plans.getPlansRegister = (_MyMessages, keys) => {
-        Api._setKeys(keys);
-        MyMessages = _MyMessages;
-        return listPlans(false, true);
-    };
-    Plans.getPlansAccounts = (_MyMessages, keys, common) => {
+    Plans.init = (_MyMessages, keys, common) => {
         sfCommon = common;
         Api._setKeys(keys);
         MyMessages = _MyMessages;
+    };
+
+    Plans.checkSession = Api.checkSession;
+
+
+    Plans.getPlansRegister = () => {
+        return listPlans(false, true);
+    };
+    Plans.getPlansAccounts = () => {
         return h('div', [
             makeHeader(),
             listPlans(false, false),

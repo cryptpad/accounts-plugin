@@ -49,16 +49,50 @@ define([
         } catch (e) {}
     });
 
-    const andThen = (keys) => {
+    const andThen = () => {
         const $container = $('#cp-app-accounts-container');
 
-        let content = Plans.getPlansAccounts(Messages, keys, common);
+        let content = Plans.getPlansAccounts();
 
         $container.append(content);
 
 
     };
 
+
+    const onSuccess = (cb) => {
+        const $container = $('#cp-app-accounts-container');
+
+        const content = h('div#cp-success-page', [
+            h('div.cp-spinner-div center',
+                h('p.alert.alert-primary', Messages.processing_wait),
+                h('div.cp-spinner-container', [
+                    h('i.fa.fa-spinner.fa-pulse.fa-3x.fa-fw.loading'),
+                    h('span.loading-message', Messages.processing)
+                ])
+            )
+        ]);
+        const $content = $(content);
+        $container.append(content);
+
+        Plans.checkSession((err, val) => {
+            if (err || !val) {
+                const alertDiv = UI.setHTML(h('p.alert.alert-danger'),
+                    Messages.processing_error);
+                $(alertDiv).append([
+                    h('br'),
+                    Messages.processing_error_details
+                ]);
+                $content.empty().append(alertDiv);
+                return void cb(err);
+            }
+            setTimeout(function () {
+                $container.empty();
+                cb();
+            }, 2000);
+        });
+
+    };
 
     var createToolbar = function () {
         var displayed = ['useradmin', 'newpad', 'limit', 'pageTitle', 'notifications'];
@@ -93,27 +127,28 @@ define([
         APP.loggedIn = common.isLoggedIn();
         APP.myEdPublic = privateData.edPublic;
 
+
         if (!common.isLoggedIn()) {
             // XXX
             return void UI.removeLoadingScreen();
         }
 
-        sFrameChan.query('ACCOUNTS_GET_KEYS', null, function (err, keys) {
-            if (err) {
-                console.error(err);
-                return void UI.removeLoadingScreen();
-            }
-            // XXX render page
-            UI.removeLoadingScreen();
-            andThen(keys);
-            /*
-            Auth.auth(res, function (err) {
-                if (err) { console.error(err); }
-                renderPage();
-                createLeftside();
+        nThen(waitFor => {
+            sFrameChan.query('ACCOUNTS_GET_KEYS', null, waitFor((err, keys) => {
+                if (err) {
+                    console.error(err);
+                    return void UI.removeLoadingScreen();
+                }
+                Plans.init(Messages, keys, common);
                 UI.removeLoadingScreen();
-            }, common);
-            */
+            }));
+        }).nThen(waitFor => {
+            if (privateData.category !== "subscribe-success") {
+                return;
+            }
+            onSuccess(waitFor());
+        }).nThen(() => {
+            andThen();
         });
     });
 });
