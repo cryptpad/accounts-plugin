@@ -14,10 +14,10 @@ const factory = (Util, Commands) => {
         Commands(keys, obj, cb);
     };
 
-    Api.subscribe = (plan, redirectURL, cb) => {
+    Api.subscribe = (plan, isRegister, cb) => {
         post({
             command: 'SUBSCRIBE',
-            redirectURL,
+            isRegister,
             user: keys.userName,
             plan
         }, (err, ret) => {

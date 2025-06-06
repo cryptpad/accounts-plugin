@@ -9,12 +9,11 @@
     "billedMonthly": "Monthly",
     "billedYearly": "Yearly",
     "link_name": "Subscription",
-
     "processing": "Processing",
     "processing_wait": "Thanks for your support! Please wait while we finish processing your subscription.",
-
-    "processing_error": "Something went wrong while we were processing your subscription.",
-    "processing_error_details": "If your account's quota is not updated automatically within the next hour please contact support at billing@cryptpad.fr.",
+    "processing_error": "Something went wrong while we were processing your subscription",
+    "processing_error_details": "If your account's quota is not updated automatically within the next hour please contact support at <a href=\"mailto:billing@cryptpad.fr\">billing@cryptpad.fr</a>.",
+    "stripe_manage": "Manage account",
 
 
     "freetitle": "Free",
@@ -37,5 +36,7 @@
     "cloud_feature2": "Quarterly updates",
     "cloud_feature3": "Customization features",
     "cloud_feature4": "Administrator support",
+    "price_monthly": "{0}€ monthly",
+    "price_yearly": "{0}€ yearly",
     "processing_success": "Your subscription has been succesfully activated. Thanks for your support!"
 }

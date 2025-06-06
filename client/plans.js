@@ -12,7 +12,6 @@ define([
     AppConfig, Messages, Api, PlansJSON) => {
     const Plans = {};
     let MyMessages = {};
-
     let sfCommon;
 
     // Support languages
@@ -25,10 +24,6 @@ define([
 
     const onYearlyChange = Util.mkEvent();
 
-    const prettyName = str => {
-        return String(str).charAt(0).toUpperCase() +
-               String(str).slice(1).toLowerCase();
-    };
 
     const makeToggle = () => {
         const monthly = h('span', MyMessages.billedMonthly);
@@ -98,9 +93,7 @@ define([
         window.location.href = url;
     };
     const onPlanPicked = (plan, isRegister) => {
-        const url = new URL(isRegister ? '/drive' : '/accounts',
-                            ApiConfig.httpUnsafeOrigin).href;
-        Api.subscribe(plan, url, (err, url) => {
+        Api.subscribe(plan, Boolean(isRegister), (err, url) => {
             if (err || !url) {
                 console.error(err || 'NO_CHECKOUT_URL');
                 return void UI.warn(Messages.error);
@@ -114,10 +107,7 @@ define([
         if (!data) { return; }
 
         // Plan name
-        let nameKey = (data.org && !data.cloud)
-            ? MyMessages._getKey('orgtitle', [data.drives])
-            : MyMessages[`${plan}title`] || plan;
-        const name = data.cloud ? nameKey : prettyName(nameKey);
+        const name = Plans.getPlanName(plan);
 
         // Price
         const priceYear = data.yearly;
@@ -174,17 +164,20 @@ define([
         }
         // Support
         let support;
-        if (data.price) {
+        if (paid) {
             support = MyMessages._getKey('plan_support', [lang]);
         } else {
             support = MyMessages._getKey('free_support', [lang]);
         }
 
         // Buttons
-        const freeTxt = !isRegister ? Messages.register_header
-                                   : MyMessages.noPlan;
+        const loggedIn = isRegister || sfCommon?.isLoggedIn();
+        const freeTxt = loggedIn ? MyMessages.noPlan
+                                    : Messages.register_header;
+        const mainTxt = loggedIn ? MyMessages.pickPlan
+                                    : Messages.register_header;
         const mainBtn = h('button.btn.btn-default.cp-colored', [
-            data.price ? MyMessages.pickPlan : (
+            paid ? mainTxt : (
                 data.cloud ? MyMessages.tryCloud : freeTxt
             )
         ]);
@@ -196,7 +189,7 @@ define([
             if (data.cloud) { // Contact
                 // TODO XXX redirect
             }
-            if (!data.monthly && !data.yearly) { // Free plan
+            if (!paid || !loggedIn) { // Free plan
                 return gotoURL(isRegister ? '/drive' : '/register');
             }
 
@@ -246,14 +239,35 @@ define([
         ]);
     };
 
+    Plans.getPlanData = plan => {
+        return PlansJSON[plan];
+    };
+
+    const prettyName = str => {
+        return String(str).charAt(0).toUpperCase() +
+               String(str).slice(1).toLowerCase();
+    };
+    Plans.getPlanName = plan => {
+        const data = Plans.getPlanData(plan);
+        let nameKey = (data.org && !data.cloud)
+            ? MyMessages._getKey('orgtitle', [data.drives])
+            : MyMessages[`${plan}title`] || plan;
+        return data.cloud ? nameKey : prettyName(nameKey);
+    };
+    Plans.getPlanPrice = (plan, yearly) => {
+        const data = Plans.getPlanData(plan);
+        const price = (yearly && data.yearly) || data.monthly;
+        return price;
+    };
+
+
     Plans.init = (_MyMessages, keys, common) => {
         sfCommon = common;
-        Api._setKeys(keys);
+        if (keys) { Api._setKeys(keys); }
         MyMessages = _MyMessages;
     };
 
     Plans.checkSession = Api.checkSession;
-
 
     Plans.getPlansRegister = () => {
         return listPlans(false, true);
@@ -265,6 +279,7 @@ define([
             listPlans(true, false),
         ]);
     };
+
 
     return Plans;
 });

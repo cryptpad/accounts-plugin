@@ -49,18 +49,63 @@ define([
         } catch (e) {}
     });
 
+    const getPlans = () => {
+        return Plans.getPlansAccounts();
+    };
+    const getMySub = () => {
+        const metadataMgr = common.getMetadataMgr();
+        const privData = metadataMgr.getPrivateData();
+        const userData = metadataMgr.getUserData();
+        const planId = APP.myPlan.plan;
+        const yearly = APP.myPlan.yearly;
+        const planData = Plans.getPlanData(planId);
+
+        // My sub
+
+        const avatar = h('div', [
+        ]);
+
+        const manageButton = h('button.btn.btn-primary-alt', [
+            h('i.fa.fa-id-card-o'),
+            h('span', Messages.stripe_manage)
+        ]);
+        const user = h('div', [
+            h('span', userData.name),
+            h('span', manageButton)
+        ]);
+
+        const priceValue = Plans.getPlanPrice(planId, yearly);
+        const priceKey = yearly ? 'price_yearly' : 'price_monthly';
+        const priceStr = Messages._getKey(priceKey, [priceValue]);
+        // XXX renews on
+        const plan = h('div', [
+            h('span', Plans.getPlanName(planId)),
+            h('span', priceStr)
+        ]);
+
+        const mySub = h('div', [
+            avatar,
+            user,
+            plan
+        ]);
+
+
+        return h('div', [
+            mySub
+        ]);
+    };
+
     const andThen = () => {
         const $container = $('#cp-app-accounts-container');
 
-        let content = Plans.getPlansAccounts();
-
-        $container.append(content);
-
-
+        if (APP.myPlan) {
+            return $container.append(getMySub());
+        }
+        $container.append(getPlans());
     };
 
 
-    const onSuccess = (cb) => {
+    const onSuccess = (category, cb) => {
         const $container = $('#cp-app-accounts-container');
 
         const content = h('div#cp-success-page', [
@@ -76,6 +121,7 @@ define([
         $container.append(content);
 
         Plans.checkSession((err, val) => {
+            // XXX handle error and success
             if (err || !val) {
                 const alertDiv = UI.setHTML(h('p.alert.alert-danger'),
                     Messages.processing_error);
@@ -84,12 +130,20 @@ define([
                     Messages.processing_error_details
                 ]);
                 $content.empty().append(alertDiv);
+                if (category === 'subscribe-drive') {
+                    return setTimeout(function () {
+                        common.gotoURL('/drive');
+                    }, 4000);
+                }
                 return void cb(err);
             }
             setTimeout(function () {
                 $container.empty();
+                if (category === 'subscribe-drive') {
+                    return void common.gotoURL('/drive');
+                }
                 cb();
-            }, 2000);
+            }, 4000);
         });
 
     };
@@ -130,6 +184,8 @@ define([
 
         if (!common.isLoggedIn()) {
             // XXX
+            Plans.init(Messages, void 0, common);
+            andThen();
             return void UI.removeLoadingScreen();
         }
 
@@ -143,10 +199,14 @@ define([
                 UI.removeLoadingScreen();
             }));
         }).nThen(waitFor => {
-            if (privateData.category !== "subscribe-success") {
+            if (!['subscribe-accounts', 'subscribe-drive'].includes(privateData.category)) {
                 return;
             }
-            onSuccess(waitFor());
+            onSuccess(privateData.category, waitFor());
+        }).nThen(waitFor => {
+            Plans.checkSession(waitFor((err, val) => {
+                APP.myPlan = val;
+            }));
         }).nThen(() => {
             andThen();
         });
