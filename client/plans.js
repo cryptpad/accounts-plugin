@@ -211,7 +211,7 @@ define([
 
         return h('div.cp-accounts-card', {
             'data-org': String(!!data.org),
-            'data-plan': plan
+            'data-accounts-plan': plan
         }, [
             h('div.cp-accounts-card-name.cp-colored', name),
             h('div.cp-accounts-card-price', [
@@ -268,6 +268,8 @@ define([
     };
 
     Plans.checkSession = Api.checkSession;
+    Plans.getMySub = Api.getMySub;
+    Plans.stripePortal = Api.stripePortal;
 
     Plans.getPlansRegister = () => {
         return listPlans(false, true);

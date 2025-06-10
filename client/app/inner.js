@@ -58,37 +58,87 @@ define([
         const userData = metadataMgr.getUserData();
         const planId = APP.myPlan.plan;
         const yearly = APP.myPlan.yearly;
+        const canceled = APP.myPlan.canceled;
         const planData = Plans.getPlanData(planId);
+        const renewal = new Date(APP.myPlan.renewal);
+        const renewDate = renewal?.toLocaleDateString(void 0, {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
 
         // My sub
 
-        const avatar = h('div', [
-        ]);
+        const avatar = h('div.cp-avatar');
+        const $avatar = $(avatar);
+        common.displayAvatar($avatar, userData.avatar, userData.name);
 
-        const manageButton = h('button.btn.btn-primary-alt', [
+        const manageButton = h('button.btn.btn-case.btn-primary-alt', [
             h('i.fa.fa-id-card-o'),
             h('span', Messages.stripe_manage)
         ]);
-        const user = h('div', [
-            h('span', userData.name),
-            h('span', manageButton)
+        const user = h('div.cp-accounts-user', [
+            h('span.cp-accounts-username', userData.name),
+            h('span.cp-accounts-usermanage', manageButton)
         ]);
 
         const priceValue = Plans.getPlanPrice(planId, yearly);
         const priceKey = yearly ? 'price_yearly' : 'price_monthly';
         const priceStr = Messages._getKey(priceKey, [priceValue]);
-        // XXX renews on
-        const plan = h('div', [
-            h('span', Plans.getPlanName(planId)),
-            h('span', priceStr)
+        const renewStr =  Messages._getKey('renews', [renewDate]);
+
+        const switchCls = canceled ? 'btn-primary' : 'btn-default';
+        const switchButton = h(`button.btn.btn-case.${switchCls}`, [
+            h('i.fa.fa-ticket'),
+            h('span', canceled ? Messages.stripe_renew
+                               : Messages.stripe_switch)
         ]);
 
-        const mySub = h('div', [
+        const canceledBox = UI.setHTML(h('div.alert.alert-danger'),
+            Messages._getKey('canceled', [renewDate]));
+        if (canceled) {
+            canceledBox.appendChild(h('br'));
+            canceledBox.appendChild(switchButton);
+        }
+
+
+        // XXX renews on
+        const plan = h('div.cp-accounts-plan', {
+            'data-accounts-plan': planId
+        }, [
+            h('span.cp-accounts-planname.cp-colored', Plans.getPlanName(planId)),
+            h('span.cp-accounts-planprice', priceStr),
+            h('span.cp-accounts-planrenew', canceled ? canceledBox
+                                                     : renewStr),
+            canceled ? undefined
+                     : h('span.cp-accounts-planswitch', switchButton)
+        ]);
+
+        const mySub = h('div.cp-accounts-mysub', [
             avatar,
             user,
             plan
         ]);
 
+
+        $(manageButton).click(() => {
+            Plans.stripePortal(false, (err, val) => {
+                if (err) {
+                    console.error(err);
+                    return void UI.alert(Messages.error);
+                }
+                common.gotoURL(val);
+            });
+        });
+        $(switchButton).click(() => {
+            Plans.stripePortal(!canceled, (err, val) => {
+                if (err) {
+                    console.error(err);
+                    return void UI.alert(Messages.error);
+                }
+                common.gotoURL(val);
+            });
+        });
 
         return h('div', [
             mySub
@@ -204,7 +254,9 @@ define([
             }
             onSuccess(privateData.category, waitFor());
         }).nThen(waitFor => {
-            Plans.checkSession(waitFor((err, val) => {
+            Plans.getMySub(waitFor((err, val) => {
+                if (!val) { return; }
+                console.error(val);
                 APP.myPlan = val;
             }));
         }).nThen(() => {

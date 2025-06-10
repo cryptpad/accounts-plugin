@@ -38,5 +38,9 @@
     "cloud_feature4": "Administrator support",
     "price_monthly": "{0}€ monthly",
     "price_yearly": "{0}€ yearly",
-    "processing_success": "Your subscription has been succesfully activated. Thanks for your support!"
+    "renews": "Renews: {0}",
+    "canceled": "Susbcription canceled.<br>Benefits preserved until <strong>{0}</strong>.",
+    "processing_success": "Your subscription has been succesfully activated. Thanks for your support!",
+    "stripe_switch": "Switch plan",
+    "stripe_renew": "Renew subscription"
 }

@@ -77,17 +77,19 @@ body {
 
         }
     }
-    .cp-accounts-card {
-        each(@plans, {
-            //&.cp-plan-@{key} {
-            &[data-plan=@{key}] {
-                .cp-colored {
-                    color: @value;
-                    border-color: @value;
-                }
+    each(@plans, {
+        //&.cp-plan-@{key} {
+        [data-accounts-plan=@{key}] {
+            .cp-colored {
+                color: @value;
+                border-color: @value;
+            }
+            &.cp-accounts-card {
                 background-color: fade(@value, 15%);
             }
-        });
+        }
+    });
+    .cp-accounts-card {
         margin: 10px 0;
         display: flex;
         flex-flow: column;

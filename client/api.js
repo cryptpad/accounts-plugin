@@ -25,11 +25,10 @@ const factory = (Util, Commands) => {
             cb(void 0, ret);
         });
     };
-    Api.stripePortal = (type, redirectURL, cb) => {
+    Api.stripePortal = (isUpdate, cb) => {
         post({
             command: 'STRIPE_PORTAL',
-            redirectURL,
-            type
+            updateSub: !!isUpdate
         }, (err, ret) => {
             if (err) { return void cb(err); }
             if (ret?.error || !ret?.url) {
@@ -43,6 +42,14 @@ const factory = (Util, Commands) => {
     Api.checkSession = (cb) => {
         post({
             command: 'CHECK_SESSION',
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+    Api.getMySub = (cb) => {
+        post({
+            command: 'GET_MY_SUB',
         }, (err, ret) => {
             if (err) { return void cb(err); }
             cb(void 0, ret);
