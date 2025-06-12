@@ -7,6 +7,7 @@ define([
     '/common/hyperscript.js',
     '/common/common-interface.js',
     '/common/common-ui-elements.js',
+    '/common/common-signing-keys.js',
     '/common/common-util.js',
     '/common/common-hash.js',
     '/customize/messages.js',
@@ -25,6 +26,7 @@ define([
     h,
     UI,
     UIElements,
+    Keys,
     Util,
     Hash,
     MessagesCP,
@@ -52,7 +54,8 @@ define([
     const getPlans = () => {
         return Plans.getPlansAccounts();
     };
-    const getMySub = () => {
+
+    const getSubData = () => {
         const metadataMgr = common.getMetadataMgr();
         const privData = metadataMgr.getPrivateData();
         const userData = metadataMgr.getUserData();
@@ -68,7 +71,6 @@ define([
         });
 
         // My sub
-
         const avatar = h('div.cp-avatar');
         const $avatar = $(avatar);
         common.displayAvatar($avatar, userData.avatar, userData.name);
@@ -114,13 +116,6 @@ define([
                      : h('span.cp-accounts-planswitch', switchButton)
         ]);
 
-        const mySub = h('div.cp-accounts-mysub', [
-            avatar,
-            user,
-            plan
-        ]);
-
-
         $(manageButton).click(() => {
             Plans.stripePortal(false, (err, val) => {
                 if (err) {
@@ -140,10 +135,278 @@ define([
             });
         });
 
-        return h('div', [
-            mySub
+        return h('div.cp-accounts-mysub', [
+            avatar,
+            user,
+            plan
         ]);
     };
+    const getStorage = () => {
+        const metadataMgr = common.getMetadataMgr();
+        const privData = metadataMgr.getPrivateData();
+        const planId = APP.myPlan.plan;
+        const planData = Plans.getPlanData(planId);
+
+        const quota = planData.quota;
+
+        const quotaGB = MessagesCP._getKey('formattedGB', [quota]);
+        const limit = h('div.cp-accounts-storage-limit', [
+            Messages._getKey('mysub_quota', [quotaGB])
+        ]);
+
+        const bar = h('div.cp-accounts-storage-bar', [
+            h('div.cp-usage-bar')
+        ]);
+        const used = h('div.cp-accounts-storage-used');
+        const $usage = $(bar).find('.cp-usage-bar');
+        const updateBar = () => {
+            common.getPinUsage(void 0, (err, data) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                if (data.plan !== planId) {
+                    const error = h('div.alert.alert-danger', Messages.quota_error);
+                    fetch(`${APP.origin}/api/updatequota`).then(r => {
+                        if (r.status === 200) {
+                            return void updateBar();
+                        }
+                        console.error(r.status, r);
+                        used.appendChild(error);
+                    }).catch(err => {
+                        console.error(err);
+                        used.appendChild(error);
+                    });
+                    return;
+                }
+                const usedGB = UIElements.prettySize(data.usage);
+                const percent = Math.round(1000*data.usage/data.limit)/10
+                $(bar).css('display', 'flex');
+                $usage.css('width', `${percent}%`);
+                used.innerText = Messages._getKey('mysub_used', [
+                    usedGB,
+                    percent
+                ]);
+            });
+        };
+        updateBar();
+
+        return h('div.cp-accounts-storage', [
+            limit,
+            bar,
+            used
+        ]);
+    };
+    const getDrives = () => {
+        const metadataMgr = common.getMetadataMgr();
+        const privData = metadataMgr.getPrivateData();
+        //const planId = APP.myPlan.plan;
+        const planId = "power"; // XXX XXX XXX XXX
+        const planData = Plans.getPlanData(planId);
+        const driveKeys = APP.myPlan.drives;
+
+        const number = h('div.cp-accounts-drives-number', [
+            Messages._getKey('drives', [planData.drives])
+        ]);
+        const list = h('div.cp-accounts-drives-list');
+
+        let addAdded = false;
+
+        const friends = common.getFriends(true);
+        // XXX TEAMS
+        const makeEntry = (key) => {
+            if (key) {
+                const userData = Object.values(friends).find(obj => {
+                    return obj.edPublic === key;
+                });
+                console.error(key, userData);
+
+                const avatar = h('div.cp-avatar');
+                const $avatar = $(avatar);
+                const name = userData.name || userData.displayName;
+                common.displayAvatar($avatar, userData.avatar, name);
+
+                const userClass = key === privData.edPublic ? '.cp-me'
+                                                : '.cp-user';
+                return h('div.cp-accounts-drive'+userClass, [
+                    h('i.fa.fa-hdd-o'),
+                    avatar,
+                    h('span.cp-drive-data', name)
+                    //profile
+                ]);
+            }
+            const data = addAdded ? h('span.cp-drive-data') :
+                UI.setHTML(h('span.cp-drive-data'),
+                    Messages._getKey('drive_add', [
+                        h('i.fa.fa-user').outerHTML,
+                        h('i.fa.fa-users').outerHTML
+                    ]));
+            addAdded = true;
+            return h('div.cp-accounts-drive.cp-add', {
+                tabindex: 0
+            }, [
+                h('i.fa.fa-hdd-o'),
+                h('i.fa.fa-plus'),
+                data
+            ]);
+        };
+
+        const openDriveModal = cb => {
+            const privData = metadataMgr.getPrivateData();
+            const friendsData = common.getFriends();
+
+            const _teams = privData.teams;
+            const teamsData = {};
+            Object.values(_teams).forEach(obj => {
+                if (!obj.edPublic) { return; }
+                teamsData[obj.edPublic] = {
+                    displayName: obj.name,
+                    edPublic: obj.edPublic,
+                    avatar: obj.avatar,
+                };
+            });
+
+            const key = UI.dialog.selectable('');
+
+            const onSelected = (el) => {
+                if (!el) {
+                    return void $(key).val('');
+                }
+                const name = $(el).attr('data-name');
+                const ed = $(el).attr('data-ed');
+                const pub = Hash.getPublicSigningKeyString(APP.origin, name, ed);
+                $(key).val(pub);
+            };
+            const msg = Messages.add_contact;
+            const contactsPicker = UIElements.getUserTeamPicker(common, {
+                msg, friendsData, teamsData
+            }, onSelected);
+            const contactsContent = h('div', [
+                contactsPicker,
+                h('div', [
+                    h('span', Messages.public_key),
+                    key
+                ])
+            ]);
+
+
+            const contactsModal = UI.dialog.customModal(contactsContent, {
+                buttons: [{
+                    name: MessagesCP.cancel,
+                    className: 'btn-cancel',
+                    onClick: () => {}
+                }, {
+                    name: Messages.add_key,
+                    iconClass: '.fa.fa-plus',
+                    className: 'btn-primary',
+                    onClick: () => {
+                        const val = $(key).val();
+                        try {
+                            const parsed = Keys.parseUser(val);
+                            if (!parsed.pubkey) {
+                                UI.warn(MessagesCP.admin_invalKey);
+                                return true;
+                            }
+                            cb(val);
+                        } catch (e) {
+                            UI.warn(MessagesCP.admin_invalKey);
+                            return true;
+                        }
+                    }
+                }]
+            });
+
+            const keyInput = h('input', {
+                placeholder: Messages.public_key
+            });
+            const keyContent = h('div', [
+                h('div', Messages.add_from_key),
+                h('div', [
+                    keyInput
+                ])
+            ]);
+            const keyModal = UI.dialog.customModal(keyContent, {
+                buttons: [{
+                    name: MessagesCP.cancel,
+                    className: 'btn-cancel',
+                    onClick: () => {}
+                }, {
+                    name: Messages.add_key,
+                    iconClass: '.fa.fa-plus',
+                    className: 'btn-primary',
+                    onClick: () => {
+                        const val = $(keyInput).val();
+                        try {
+                            const parsed = Keys.parseUser(val);
+                            if (!parsed.pubkey) {
+                                UI.warn(MessagesCP.admin_invalKey);
+                                return true;
+                            }
+                            cb(val);
+                        } catch (e) {
+                            UI.warn(MessagesCP.admin_invalKey);
+                            return true;
+                        }
+                    }
+                }]
+            });
+
+            const tabs = [{
+                content: contactsModal,
+                title: Messages.from_contacts,
+                icon: 'fa fa-users',
+                active: true
+            }, {
+                content: keyModal,
+                title: Messages.from_key,
+                icon: 'fa fa-key',
+                active: false
+            }]
+
+            UI.openCustomModal(UI.dialog.tabs(tabs), {
+                wide: true
+            });
+
+        };
+        const driveModal = UI.customModal
+
+        // Make sure we can always manage all drives, even if we
+        // somehow go over the limit
+        const max = Math.max(planData.drives, driveKeys.length);
+        for(let i = 0; i < max; i++) {
+            const data = !i ? privData.edPublic
+                            : driveKeys[i-1];
+
+            const content = makeEntry(data);
+
+            Util.onClickEnter($(content), () => {
+                openDriveModal(key => {
+                    // XXX GIFT_NOTE
+                    Plans.addToPlan(key, 'pewpew', (err) => {
+                        if (err) {
+                            return void UI.warn(Messages.error);
+                        }
+                        // XXX REDRAW
+                    });
+                })
+            });
+
+            list.appendChild(content);
+        }
+
+        return h('div.cp-accounts-drives', [
+            number,
+            list
+        ]);
+    };
+    const getMySub = () => {
+        return h('div', [
+            getSubData(),
+            getStorage(),
+            getDrives()
+        ]);
+    };
+
 
     const andThen = () => {
         const $container = $('#cp-app-accounts-container');
@@ -230,7 +493,6 @@ define([
         APP.origin = privateData.origin;
         APP.loggedIn = common.isLoggedIn();
         APP.myEdPublic = privateData.edPublic;
-
 
         if (!common.isLoggedIn()) {
             // XXX

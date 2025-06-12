@@ -56,6 +56,17 @@ const factory = (Util, Commands) => {
         });
     };
 
+    Api.addToPlan = (addKey, giftNote, cb) => {
+        post({
+            command: 'ADD_TO_PLAN',
+            addKey,
+            giftNote
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+
     return Api;
 };
 

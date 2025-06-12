@@ -14,6 +14,10 @@
     "processing_error": "Something went wrong while we were processing your subscription",
     "processing_error_details": "If your account's quota is not updated automatically within the next hour please contact support at <a href=\"mailto:billing@cryptpad.fr\">billing@cryptpad.fr</a>.",
     "stripe_manage": "Manage account",
+    "accountsPage": "Subscription",
+    "contacts_contacts": "Contacts",
+    "contacts_teams": "Teams",
+
 
 
     "freetitle": "Free",
@@ -42,5 +46,16 @@
     "canceled": "Susbcription canceled.<br>Benefits preserved until <strong>{0}</strong>.",
     "processing_success": "Your subscription has been succesfully activated. Thanks for your support!",
     "stripe_switch": "Switch plan",
-    "stripe_renew": "Renew subscription"
+    "stripe_renew": "Renew subscription",
+    "mysub_quota": "Storage limit: {0}",
+    "mysub_used": "Used: {0} ({1}%)",
+    "quota_error": "Your subscription doesn't match your storage limit on this CryptPad instance. If your quota is not updated automatically within the next jour, please contact the support.",
+    "drives": "Drives: {0}",
+    "drive_add": "assign a {0} contact or {1} team",
+    "from_contacts": "From your contacts",
+    "from_key": "From public key",
+    "add_contact": "Select a contact or a team to share your susbcription's limit with them.",
+    "add_from_key": "Add a user or team public key to share your susbcription's limit with them.",
+    "public_key": "Team or user public key",
+    "add_key": "Add selected key"
 }

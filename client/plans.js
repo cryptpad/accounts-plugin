@@ -270,6 +270,7 @@ define([
     Plans.checkSession = Api.checkSession;
     Plans.getMySub = Api.getMySub;
     Plans.stripePortal = Api.stripePortal;
+    Plans.addToPlan = Api.addToPlan;
 
     Plans.getPlansRegister = () => {
         return listPlans(false, true);
