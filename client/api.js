@@ -66,6 +66,15 @@ const factory = (Util, Commands) => {
             cb(void 0, ret);
         });
     };
+    Api.cancelGift = (id, cb) => {
+        post({
+            command: 'CANCEL_GIFT',
+            id
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
 
     return Api;
 };

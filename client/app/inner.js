@@ -35,12 +35,10 @@ define([
     )
 {
 
-    var APP = {};
-    try {
-        APP.isBrave = navigator.brave.isBrave();
-    } catch (e) {}
+    const APP = {};
+    const evOnRefresh = Util.mkEvent();
 
-    var common;
+    let common;
 
     let Messages = {};
     // Get translations from plugin
@@ -52,9 +50,38 @@ define([
     });
 
     const getPlans = () => {
-        return Plans.getPlansAccounts();
+        return Plans.getPlansAccounts(APP.myPlan?.plan, () => {
+            evOnRefresh.fire();
+        });
     };
 
+    const findUserTeam = key => {
+        const metadataMgr = common.getMetadataMgr();
+        const privData = metadataMgr.getPrivateData();
+        const friends = common.getFriends(true);
+        const teams = privData.teams;
+        return Object.values(friends).find(obj => {
+            return obj.edPublic === key;
+        }) || Object.values(teams).find(obj => {
+            return obj.edPublic === key;
+        }) || undefined;
+    };
+
+    const getHeader = () => {
+        const back = h('a', {
+            href: '/accounts'
+        }, Messages.back_to_plans);
+        $(back).click(e => {
+            e.preventDefault();
+            evOnRefresh.fire(false, true);
+        });
+        return h('div.cp-accounts-mysub-header', [
+            h('div.cp-accounts-title', Messages.accounts_cat_mysubs),
+            h('div', [
+                back
+            ])
+        ]);
+    };
     const getSubData = () => {
         const metadataMgr = common.getMetadataMgr();
         const privData = metadataMgr.getPrivateData();
@@ -63,6 +90,7 @@ define([
         const yearly = APP.myPlan.yearly;
         const canceled = APP.myPlan.canceled;
         const planData = Plans.getPlanData(planId);
+
         const renewal = new Date(APP.myPlan.renewal);
         const renewDate = renewal?.toLocaleDateString(void 0, {
             day: "numeric",
@@ -74,6 +102,60 @@ define([
         const avatar = h('div.cp-avatar');
         const $avatar = $(avatar);
         common.displayAvatar($avatar, userData.avatar, userData.name);
+
+        // Gifted sub: don't show stripe buttons and price
+        if (APP.myPlan?.shared && APP.myPlan.owner) {
+            const owner = APP.myPlan.owner;
+            const ownerData = findUserTeam(owner);
+            const ownerName = ownerData?.displayName
+                                || ownerData?.name
+                                || Messages.unknown;
+
+            const ownerAvatar = h('div.cp-avatar');
+            common.displayAvatar($(ownerAvatar),
+                                ownerData?.avatar, '?');
+
+            const user = h('div.cp-accounts-user', [
+                h('span.cp-accounts-username', userData.name),
+                h('div.cp-accounts-usershared', [
+                    h('label', Messages.shared_by),
+                    h('div.cp-accounts-sharedby', [
+                        ownerAvatar,
+                        h('span', ownerName || Messages.unknown)
+                    ])
+                ]),
+            ]);
+
+            const cancel = h('button.btn.btn-danger', [
+                h('i.fa.fa-times'),
+                Messages.cancel
+            ]);
+            Util.onClickEnter($(cancel), () => {
+                Plans.cancelGift(APP.myPlan?.id, err => {
+                    if (err) {
+                        console.error(err);
+                        return void UI.warn(Messages.error);
+                    }
+                    evOnRefresh.fire();
+                });
+            });
+
+            const plan = h('div.cp-accounts-plan', {
+                'data-accounts-plan': planId
+            }, [
+                h('span.cp-accounts-planname.cp-colored', Plans.getPlanName(planId)),
+                h('span.cp-accounts-planprice', Messages.free),
+                h('span.cp-accounts-planswitch', cancel)
+            ]);
+
+            return h('div.cp-accounts-mysub.cp-gifted', [
+                avatar,
+                user,
+                plan
+            ]);
+
+        }
+
 
         const manageButton = h('button.btn.btn-case.btn-primary-alt', [
             h('i.fa.fa-id-card-o'),
@@ -103,8 +185,6 @@ define([
             canceledBox.appendChild(switchButton);
         }
 
-
-        // XXX renews on
         const plan = h('div.cp-accounts-plan', {
             'data-accounts-plan': planId
         }, [
@@ -159,7 +239,20 @@ define([
         ]);
         const used = h('div.cp-accounts-storage-used');
         const $usage = $(bar).find('.cp-usage-bar');
+        const showUsage = data => {
+            const usedGB = UIElements.prettySize(data.usage);
+            const percent = Math.round(1000*data.usage/data.limit)/10
+            $(bar).css('display', 'flex');
+            $usage.css('width', `${percent}%`);
+            used.innerText = Messages._getKey('mysub_used', [
+                usedGB,
+                percent
+            ]);
+        };
         const updateBar = () => {
+            if (APP.usage) {
+                return void showUsage(APP.usage);
+            }
             common.getPinUsage(void 0, (err, data) => {
                 if (err) {
                     console.error(err);
@@ -179,14 +272,8 @@ define([
                     });
                     return;
                 }
-                const usedGB = UIElements.prettySize(data.usage);
-                const percent = Math.round(1000*data.usage/data.limit)/10
-                $(bar).css('display', 'flex');
-                $usage.css('width', `${percent}%`);
-                used.innerText = Messages._getKey('mysub_used', [
-                    usedGB,
-                    percent
-                ]);
+                APP.usage = data;
+                showUsage(data);
             });
         };
         updateBar();
@@ -197,42 +284,95 @@ define([
             used
         ]);
     };
+
     const getDrives = () => {
+        // Gifted shared plan: can't manage extra drives
+        if (APP.myPlan.shared) { return; }
+
         const metadataMgr = common.getMetadataMgr();
         const privData = metadataMgr.getPrivateData();
-        //const planId = APP.myPlan.plan;
-        const planId = "power"; // XXX XXX XXX XXX
+        const planId = APP.myPlan.plan;
         const planData = Plans.getPlanData(planId);
-        const driveKeys = APP.myPlan.drives;
+        const driveData = APP.myPlan.drives || {};
+        const driveKeys = Object.keys(driveData);
+
+        // Personal plan: can't manage extra drives
+        if (planData?.drives === 1) { return; }
 
         const number = h('div.cp-accounts-drives-number', [
-            Messages._getKey('drives', [planData.drives])
+            Messages._getKey('drives', [
+                Messages._getKey('drivesNumber', [
+                    (driveKeys.length + 1),
+                    planData.drives
+                ])
+            ])
         ]);
         const list = h('div.cp-accounts-drives-list');
 
         let addAdded = false;
 
         const friends = common.getFriends(true);
-        // XXX TEAMS
-        const makeEntry = (key) => {
-            if (key) {
-                const userData = Object.values(friends).find(obj => {
-                    return obj.edPublic === key;
+
+        const addHandlers = (profile, remove, subId, userData) => {
+            Util.onClickEnter($(profile), () => {
+                const hash = userData.profile;
+                const href = Hash.hashToHref(hash, 'profile');
+                common.openURL(href);
+            });
+            Util.onClickEnter($(remove), () => {
+                Plans.cancelGift(subId, err => {
+                    if (err) {
+                        console.error(err);
+                        return void UI.warn(Messages.error);
+                    }
+                    evOnRefresh.fire();
                 });
-                console.error(key, userData);
+            });
+        };
+
+        const makeEntry = (key, subId, _name) => {
+            const privData = metadataMgr.getPrivateData();
+            if (key) {
+                const userData = findUserTeam(key) || {
+                    name: _name
+                };
 
                 const avatar = h('div.cp-avatar');
                 const $avatar = $(avatar);
                 const name = userData.name || userData.displayName;
                 common.displayAvatar($avatar, userData.avatar, name);
 
-                const userClass = key === privData.edPublic ? '.cp-me'
-                                                : '.cp-user';
+                const isMe = key === privData.edPublic;
+
+                const teamIcon = h('i.fa.fa-users', {
+                    title: Messages.team_drive,
+                    'aria-label': Messages.team_drive
+                });
+                const profile = h('i.fa.fa-user', {
+                    role: 'button',
+                    tabindex: 0,
+                    title: MessagesCP.profileButton,
+                    'aria-label': MessagesCP.profileButton
+                });
+                const remove = h('i.fa.fa-times', {
+                    role: 'button',
+                    tabindex: 0,
+                    title: Messages.remove_label,
+                    'aria-label': Messages.remove_label
+                });
+                const actions = isMe ? undefined : h('div.cp-actions', [
+                    userData.profile ? profile : undefined,
+                    userData.roster ? teamIcon : undefined,
+                    remove
+                ]);
+                addHandlers(profile, remove, subId, userData);
+
+                const userClass = isMe ? '.cp-me' : '.cp-user';
                 return h('div.cp-accounts-drive'+userClass, [
                     h('i.fa.fa-hdd-o'),
                     avatar,
-                    h('span.cp-drive-data', name)
-                    //profile
+                    h('span.cp-drive-data', name),
+                    actions
                 ]);
             }
             const data = addAdded ? h('span.cp-drive-data') :
@@ -243,6 +383,8 @@ define([
                     ]));
             addAdded = true;
             return h('div.cp-accounts-drive.cp-add', {
+                'aria-label': data.innerText,
+                'role': 'button',
                 tabindex: 0
             }, [
                 h('i.fa.fa-hdd-o'),
@@ -255,10 +397,21 @@ define([
             const privData = metadataMgr.getPrivateData();
             const friendsData = common.getFriends();
 
+            const addedKeys = Object.values(driveData).map(obj => {
+                return obj.key;
+            });
+            Object.keys(friendsData).forEach(k => {
+                const obj = friendsData[k];
+                if (addedKeys.includes(obj.edPublic)) {
+                    delete friendsData[k];
+                }
+            });
+
             const _teams = privData.teams;
             const teamsData = {};
             Object.values(_teams).forEach(obj => {
                 if (!obj.edPublic) { return; }
+                if (addedKeys.includes(obj.edPublic)) { return; }
                 teamsData[obj.edPublic] = {
                     displayName: obj.name,
                     edPublic: obj.edPublic,
@@ -266,7 +419,9 @@ define([
                 };
             });
 
-            const key = UI.dialog.selectable('');
+            const key = UI.dialog.selectable('', {
+                id: 'cp-accounts-contact-key'
+            });
 
             const onSelected = (el) => {
                 if (!el) {
@@ -281,14 +436,24 @@ define([
             const contactsPicker = UIElements.getUserTeamPicker(common, {
                 msg, friendsData, teamsData
             }, onSelected);
+            const note = h('input#cp-accounts-contact-note', {
+                placeholder: Messages.gift_note
+            });
             const contactsContent = h('div', [
                 contactsPicker,
                 h('div', [
-                    h('span', Messages.public_key),
+                    h('label', {
+                        for: 'cp-accounts-contact-key'
+                    }, Messages.public_key),
                     key
+                ]),
+                h('div', [
+                    h('label', {
+                        for: 'cp-accounts-contact-note'
+                    }, Messages.gift_note_label),
+                    note
                 ])
             ]);
-
 
             const contactsModal = UI.dialog.customModal(contactsContent, {
                 buttons: [{
@@ -307,7 +472,8 @@ define([
                                 UI.warn(MessagesCP.admin_invalKey);
                                 return true;
                             }
-                            cb(val);
+                            const noteTxt = $(note).val();
+                            cb(val, noteTxt);
                         } catch (e) {
                             UI.warn(MessagesCP.admin_invalKey);
                             return true;
@@ -316,13 +482,24 @@ define([
                 }]
             });
 
-            const keyInput = h('input', {
+            const keyInput = h('input#cp-accounts-drive-key', {
                 placeholder: Messages.public_key
             });
+            const noteInput = h('input#cp-accounts-drive-note', {
+                placeholder: Messages.gift_note
+            });
             const keyContent = h('div', [
-                h('div', Messages.add_from_key),
                 h('div', [
+                    h('label', {
+                        for: 'cp-accounts-drive-key'
+                    }, Messages.add_from_key),
                     keyInput
+                ]),
+                h('div', [
+                    h('label', {
+                        for: 'cp-accounts-drive-note'
+                    }, Messages.gift_note_label),
+                    noteInput
                 ])
             ]);
             const keyModal = UI.dialog.customModal(keyContent, {
@@ -342,7 +519,8 @@ define([
                                 UI.warn(MessagesCP.admin_invalKey);
                                 return true;
                             }
-                            cb(val);
+                            const noteTxt = $(noteInput).val();
+                            cb(val, noteTxt);
                         } catch (e) {
                             UI.warn(MessagesCP.admin_invalKey);
                             return true;
@@ -374,24 +552,25 @@ define([
         // somehow go over the limit
         const max = Math.max(planData.drives, driveKeys.length);
         for(let i = 0; i < max; i++) {
-            const data = !i ? privData.edPublic
-                            : driveKeys[i-1];
+            const id = driveKeys[i-1];
+            const data = !i ? { key: privData.edPublic }
+                            : driveData[id];
 
-            const content = makeEntry(data);
+            const content = makeEntry(data?.key, id, data?.name);
+            list.appendChild(content);
 
+            if (!i || data) { continue; }
             Util.onClickEnter($(content), () => {
-                openDriveModal(key => {
-                    // XXX GIFT_NOTE
-                    Plans.addToPlan(key, 'pewpew', (err) => {
+                if (!i) { return; }
+                openDriveModal((key, note) => {
+                    Plans.addToPlan(key, note || '', (err) => {
                         if (err) {
-                            return void UI.warn(Messages.error);
+                            return void UI.warn(MessagesCP.error);
                         }
-                        // XXX REDRAW
+                        evOnRefresh.fire();
                     });
                 })
             });
-
-            list.appendChild(content);
         }
 
         return h('div.cp-accounts-drives', [
@@ -401,6 +580,7 @@ define([
     };
     const getMySub = () => {
         return h('div', [
+            getHeader(),
             getSubData(),
             getStorage(),
             getDrives()
@@ -408,14 +588,34 @@ define([
     };
 
 
-    const andThen = () => {
+    const andThen = (forcePlans) => {
         const $container = $('#cp-app-accounts-container');
 
-        if (APP.myPlan) {
-            return $container.append(getMySub());
+        if (APP.myPlan && !forcePlans) {
+            return $container.empty().append(getMySub());
         }
-        $container.append(getPlans());
+        $container.empty().append(getPlans());
     };
+
+    let firing = false;
+    evOnRefresh.reg((listOnly, forcePlans) => {
+        if (firing) { return; }
+        if (listOnly) {
+            if (!APP.myPlan) { return; }
+            $('.cp-accounts-drives').after(getDrives()).remove();
+            return;
+        }
+        if (forcePlans) {
+            return void andThen(true);
+        }
+        firing = true;
+        Plans.getMySub((err, val) => {
+            firing = false;
+            console.error(err, val);
+            APP.myPlan = val;
+            andThen();
+        });
+    });
 
 
     const onSuccess = (category, cb) => {
@@ -434,7 +634,6 @@ define([
         $container.append(content);
 
         Plans.checkSession((err, val) => {
-            // XXX handle error and success
             if (err || !val) {
                 const alertDiv = UI.setHTML(h('p.alert.alert-danger'),
                     Messages.processing_error);
@@ -495,7 +694,6 @@ define([
         APP.myEdPublic = privateData.edPublic;
 
         if (!common.isLoggedIn()) {
-            // XXX
             Plans.init(Messages, void 0, common);
             andThen();
             return void UI.removeLoadingScreen();
@@ -508,21 +706,19 @@ define([
                     return void UI.removeLoadingScreen();
                 }
                 Plans.init(Messages, keys, common);
-                UI.removeLoadingScreen();
             }));
         }).nThen(waitFor => {
             if (!['subscribe-accounts', 'subscribe-drive'].includes(privateData.category)) {
                 return;
             }
+            UI.removeLoadingScreen();
             onSuccess(privateData.category, waitFor());
-        }).nThen(waitFor => {
-            Plans.getMySub(waitFor((err, val) => {
-                if (!val) { return; }
-                console.error(val);
-                APP.myPlan = val;
-            }));
         }).nThen(() => {
-            andThen();
+            evOnRefresh.fire();
+            metadataMgr.onChange(() => {
+                evOnRefresh.fire(true);
+                UI.removeLoadingScreen();
+            });
         });
     });
 });

@@ -4,6 +4,7 @@
     "basictitle": "PERSONAL",
     "orgtitle": "{0} Users",
     "price": "{0}€",
+    "yourPlan": "Your plan",
     "pickPlan": "Pick this plan",
     "buttons_donate": "Donate",
     "billedMonthly": "Monthly",
@@ -15,8 +16,10 @@
     "processing_error_details": "If your account's quota is not updated automatically within the next hour please contact support at <a href=\"mailto:billing@cryptpad.fr\">billing@cryptpad.fr</a>.",
     "stripe_manage": "Manage account",
     "accountsPage": "Subscription",
-    "contacts_contacts": "Contacts",
-    "contacts_teams": "Teams",
+    "gift_note": "Gift note (optional)",
+    "gift_note_label": "Add a personal note for the beneficiary.",
+    "cancel": "Cancel",
+    "accounts_cat_mysubs": "My subscription",
 
 
 
@@ -51,11 +54,19 @@
     "mysub_used": "Used: {0} ({1}%)",
     "quota_error": "Your subscription doesn't match your storage limit on this CryptPad instance. If your quota is not updated automatically within the next jour, please contact the support.",
     "drives": "Drives: {0}",
+    "drivesNumber": "{0} out of {1}",
     "drive_add": "assign a {0} contact or {1} team",
     "from_contacts": "From your contacts",
     "from_key": "From public key",
     "add_contact": "Select a contact or a team to share your susbcription's limit with them.",
     "add_from_key": "Add a user or team public key to share your susbcription's limit with them.",
     "public_key": "Team or user public key",
-    "add_key": "Add selected key"
+    "add_key": "Add selected key",
+    "remove_label": "Remove this drive from the shared storage",
+    "team_drive": "Team drive",
+    "free": "Free",
+    "shared_by": "Subscription shared by",
+    "unknown": "Unknown user",
+    "back_to_plans": "View all the available plans",
+    "back_to_mysub": "Manage your subscription"
 }

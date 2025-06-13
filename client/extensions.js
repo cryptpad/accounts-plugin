@@ -135,7 +135,8 @@ define([
                     },
                     content: h('span', priv.plan ? MyMessages.link_name : Messages.pricing),
                     action: function () {
-                        common.openURL(priv.plan ? priv.accounts.upgradeURL :'/features.html');
+                        common.openURL(priv.plan ? '/accounts'
+                                            :'/features.html');
                     },
                 };
             }

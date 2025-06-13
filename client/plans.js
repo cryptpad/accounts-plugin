@@ -65,6 +65,24 @@ define([
         );
     };
 
+    const makeBackLink = (myPlan, myPlanCb) => {
+        if (!myPlan) { return; }
+        if (typeof (myPlanCb) !== "function") { return; }
+
+        const back = h('a', {
+            href: '/accounts'
+        }, [
+            h('i.fa.fa-arrow-circle-left'),
+            h('span', MyMessages.back_to_mysub)
+        ]);
+        $(back).click(e => {
+            e.preventDefault();
+            myPlanCb();
+        });
+        return h('div.cp-accounts-plans-back', [
+            back
+        ]);
+    };
     const makeHeader = () => {
         return h('div.cp-accounts-header', [
             h('div.cp-accounts-header-item', [
@@ -102,7 +120,7 @@ define([
             gotoURL(url?.permalink);
         });
     };
-    const makeCard = (plan, isRegister) => {
+    const makeCard = (plan, isRegister, isMyPlan) => {
         const data = PlansJSON[plan];
         if (!data) { return; }
 
@@ -174,9 +192,11 @@ define([
         const loggedIn = isRegister || sfCommon?.isLoggedIn();
         const freeTxt = loggedIn ? MyMessages.noPlan
                                     : Messages.register_header;
-        const mainTxt = loggedIn ? MyMessages.pickPlan
-                                    : Messages.register_header;
-        const mainBtn = h('button.btn.btn-default.cp-colored', [
+        const mainTxt = isMyPlan ? MyMessages.yourPlan
+                            : (loggedIn ? MyMessages.pickPlan
+                                    : Messages.register_header);
+        const attr = isMyPlan ? { disabled: 'disabled' } : {};
+        const mainBtn = h('button.btn.btn-default.cp-colored', attr, [
             paid ? mainTxt : (
                 data.cloud ? MyMessages.tryCloud : freeTxt
             )
@@ -227,13 +247,13 @@ define([
         ]);
     };
 
-    const listPlans = (org, isRegister) => {
+    const listPlans = (org, isRegister, myPlan) => {
         return h('div.cp-accounts-list', [
             org ? makeOrgTitle() : makeToggle(),
             Object.keys(PlansJSON)
             .filter(k => (!!PlansJSON[k].org === org))
             .map(k => {
-                const card = makeCard(k, isRegister);
+                const card = makeCard(k, isRegister, k === myPlan);
                 return card;
             })
         ]);
@@ -271,15 +291,17 @@ define([
     Plans.getMySub = Api.getMySub;
     Plans.stripePortal = Api.stripePortal;
     Plans.addToPlan = Api.addToPlan;
+    Plans.cancelGift = Api.cancelGift;
 
     Plans.getPlansRegister = () => {
         return listPlans(false, true);
     };
-    Plans.getPlansAccounts = () => {
+    Plans.getPlansAccounts = (myPlan, myPlanCb) => {
         return h('div', [
+            makeBackLink(myPlan, myPlanCb),
             makeHeader(),
-            listPlans(false, false),
-            listPlans(true, false),
+            listPlans(false, false, myPlan),
+            listPlans(true, false, myPlan),
         ]);
     };
 
