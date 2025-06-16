@@ -64,16 +64,6 @@
             }
             margin-bottom: 40px;
         }
-        .cp-accounts-plans-back {
-            margin-bottom: 10px;
-            margin-left: 20px;
-            a {
-                i {
-                    margin-right: 10px;
-                }
-                color: @cryptpad_color_link;
-            }
-        }
 
         #cp-success-page {
             font-size: 16px;
@@ -97,11 +87,20 @@
             max-width: ~"calc(100vw - 10px)";
         }
         .cp-accounts-mysub-header {
+            margin-bottom: 10px;
+            margin-left: 20px;
             .cp-accounts-title {
                 font-size: 36px;
                 text-align: center;
             }
+            .cp-accounts-links {
+                display: flex;
+                flex-flow: column;
+            }
             a {
+                i {
+                    margin-right: 10px;
+                }
                 color: @cryptpad_color_link;
             }
         }

@@ -24,6 +24,12 @@ define([
 
     const onYearlyChange = Util.mkEvent();
 
+    Plans.ENABLED_STATUS = [
+        'active',
+        'trialing',
+        'past_due'
+    ];
+
 
     const makeToggle = () => {
         const monthly = h('span', MyMessages.billedMonthly);
@@ -65,24 +71,6 @@ define([
         );
     };
 
-    const makeBackLink = (myPlan, myPlanCb) => {
-        if (!myPlan) { return; }
-        if (typeof (myPlanCb) !== "function") { return; }
-
-        const back = h('a', {
-            href: '/accounts'
-        }, [
-            h('i.fa.fa-arrow-circle-left'),
-            h('span', MyMessages.back_to_mysub)
-        ]);
-        $(back).click(e => {
-            e.preventDefault();
-            myPlanCb();
-        });
-        return h('div.cp-accounts-plans-back', [
-            back
-        ]);
-    };
     const makeHeader = () => {
         return h('div.cp-accounts-header', [
             h('div.cp-accounts-header-item', [
@@ -259,7 +247,11 @@ define([
         ]);
     };
 
-    Plans.getPlanData = plan => {
+    Plans.isYearly = plan => {
+        return /12$/.test(plan);
+    };
+    Plans.getPlanData = _plan => {
+        const plan = _plan.replace(/12$/, '');
         return PlansJSON[plan];
     };
 
@@ -274,8 +266,9 @@ define([
             : MyMessages[`${plan}title`] || plan;
         return data.cloud ? nameKey : prettyName(nameKey);
     };
-    Plans.getPlanPrice = (plan, yearly) => {
+    Plans.getPlanPrice = (plan, _yearly) => {
         const data = Plans.getPlanData(plan);
+        const yearly = _yearly || Plans.isYearly(plan);
         const price = (yearly && data.yearly) || data.monthly;
         return price;
     };
@@ -287,18 +280,11 @@ define([
         MyMessages = _MyMessages;
     };
 
-    Plans.checkSession = Api.checkSession;
-    Plans.getMySub = Api.getMySub;
-    Plans.stripePortal = Api.stripePortal;
-    Plans.addToPlan = Api.addToPlan;
-    Plans.cancelGift = Api.cancelGift;
-
     Plans.getPlansRegister = () => {
         return listPlans(false, true);
     };
-    Plans.getPlansAccounts = (myPlan, myPlanCb) => {
+    Plans.getPlansAccounts = (myPlan) => {
         return h('div', [
-            makeBackLink(myPlan, myPlanCb),
             makeHeader(),
             listPlans(false, false, myPlan),
             listPlans(true, false, myPlan),

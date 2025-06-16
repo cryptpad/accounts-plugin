@@ -12,7 +12,9 @@ define([
     '/common/common-hash.js',
     '/customize/messages.js',
     '/common/extensions.js',
+    '/accounts/app/admin.js',
     '/accounts/plans.js',
+    '/accounts/api.js',
 
     'css!/components/bootstrap/dist/css/bootstrap.min.css',
     'css!/components/components-font-awesome/css/font-awesome.min.css',
@@ -31,7 +33,9 @@ define([
     Hash,
     MessagesCP,
     Extensions,
-    Plans
+    Admin,
+    Plans,
+    Api
     )
 {
 
@@ -49,12 +53,6 @@ define([
         } catch (e) {}
     });
 
-    const getPlans = () => {
-        return Plans.getPlansAccounts(APP.myPlan?.plan, () => {
-            evOnRefresh.fire();
-        });
-    };
-
     const findUserTeam = key => {
         const metadataMgr = common.getMetadataMgr();
         const privData = metadataMgr.getPrivateData();
@@ -68,18 +66,59 @@ define([
     };
 
     const getHeader = () => {
-        const back = h('a', {
+        const plans = h('a', {
             href: '/accounts'
-        }, Messages.back_to_plans);
-        $(back).click(e => {
+        }, [
+            h('i.fa.fa-credit-card'),
+            h('span', Messages.goto_plans)
+        ]);
+        $(plans).click(e => {
             e.preventDefault();
-            evOnRefresh.fire(false, true);
+            evOnRefresh.fire(false, 'plans');
         });
+
+        const subs = APP.myPlan ? h('a', {
+            href: '/accounts'
+        }, [
+            h('i.fa.fa-arrow-circle-left'),
+            h('span', Messages.goto_mysub)
+        ]) : undefined;
+        if (APP.myPlan) {
+            $(subs).click(e => {
+                e.preventDefault();
+                evOnRefresh.fire();
+            });
+        }
+
+        const admin = APP.isAdmin ? h('a', {
+            href: '/accounts'
+        }, [
+            h('i.fa.fa-cogs'),
+            h('span', Messages.goto_admin)
+        ]) : undefined;
+        if (APP.isAdmin) {
+            $(admin).click(e => {
+                e.preventDefault();
+                evOnRefresh.fire(false, 'admin');
+            });
+        }
+
         return h('div.cp-accounts-mysub-header', [
-            h('div.cp-accounts-title', Messages.accounts_cat_mysubs),
-            h('div', [
-                back
+            APP.cat === "subs"
+                ? h('div.cp-accounts-title', Messages.accounts_cat_mysubs)
+                : undefined,
+            h('div.cp-accounts-links', [
+                APP.cat !== 'plans' ? plans : undefined,
+                APP.cat !== 'subs' ? subs : undefined,
+                APP.cat !== 'admin' ? admin : undefined
             ])
+        ]);
+    };
+
+    const getPlans = () => {
+        return h('div', [
+            getHeader(),
+            Plans.getPlansAccounts(APP.myPlan?.plan)
         ]);
     };
     const getSubData = () => {
@@ -131,7 +170,7 @@ define([
                 Messages.cancel
             ]);
             Util.onClickEnter($(cancel), () => {
-                Plans.cancelGift(APP.myPlan?.id, err => {
+                Api.cancelGift(APP.myPlan?.id, err => {
                     if (err) {
                         console.error(err);
                         return void UI.warn(Messages.error);
@@ -197,7 +236,7 @@ define([
         ]);
 
         $(manageButton).click(() => {
-            Plans.stripePortal(false, (err, val) => {
+            Api.stripePortal(false, (err, val) => {
                 if (err) {
                     console.error(err);
                     return void UI.alert(Messages.error);
@@ -206,7 +245,7 @@ define([
             });
         });
         $(switchButton).click(() => {
-            Plans.stripePortal(!canceled, (err, val) => {
+            Api.stripePortal(!canceled, (err, val) => {
                 if (err) {
                     console.error(err);
                     return void UI.alert(Messages.error);
@@ -320,7 +359,7 @@ define([
                 common.openURL(href);
             });
             Util.onClickEnter($(remove), () => {
-                Plans.cancelGift(subId, err => {
+                Api.cancelGift(subId, err => {
                     if (err) {
                         console.error(err);
                         return void UI.warn(Messages.error);
@@ -563,7 +602,7 @@ define([
             Util.onClickEnter($(content), () => {
                 if (!i) { return; }
                 openDriveModal((key, note) => {
-                    Plans.addToPlan(key, note || '', (err) => {
+                    Api.addToPlan(key, note || '', (err) => {
                         if (err) {
                             return void UI.warn(MessagesCP.error);
                         }
@@ -587,33 +626,53 @@ define([
         ]);
     };
 
+    const getAdminTables = () => {
 
-    const andThen = (forcePlans) => {
+    };
+    const getAdmin = () => {
+        return h('div', [
+            getHeader(),
+            APP.adminUI.create()
+            //getAdminTables()
+        ]);
+    };
+
+    const andThen = (forceCat) => {
         const $container = $('#cp-app-accounts-container');
+        forceCat ||= 'subs';
 
-        if (APP.myPlan && !forcePlans) {
+        if (APP.isAdmin && forceCat === "admin") {
+            APP.cat = "admin";
+            return $container.empty().append(getAdmin());
+        }
+        // Default if premium
+        if (APP.myPlan && forceCat === "subs") {
+            APP.cat = "subs";
             return $container.empty().append(getMySub());
         }
+        // Default if not premium, can be forced if premium
+        APP.cat = "plans";
         $container.empty().append(getPlans());
     };
 
     let firing = false;
-    evOnRefresh.reg((listOnly, forcePlans) => {
+    evOnRefresh.reg((noRefresh, forceCat) => {
         if (firing) { return; }
-        if (listOnly) {
+        if (noRefresh) {
             if (!APP.myPlan) { return; }
             $('.cp-accounts-drives').after(getDrives()).remove();
             return;
         }
-        if (forcePlans) {
-            return void andThen(true);
+        if (forceCat) {
+            return void andThen(forceCat);
         }
         firing = true;
-        Plans.getMySub((err, val) => {
+        Api.getMySub((err, val) => {
             firing = false;
             console.error(err, val);
             APP.myPlan = val;
-            andThen();
+            APP.isAdmin = val.isAdmin;
+            andThen(forceCat);
         });
     });
 
@@ -633,7 +692,7 @@ define([
         const $content = $(content);
         $container.append(content);
 
-        Plans.checkSession((err, val) => {
+        Api.checkSession((err, val) => {
             if (err || !val) {
                 const alertDiv = UI.setHTML(h('p.alert.alert-danger'),
                     Messages.processing_error);
@@ -686,9 +745,9 @@ define([
         var privateData = metadataMgr.getPrivateData();
         common.setTabTitle(Messages.accountsPage);
 
-        APP.isAdmin = privateData?.edPublic &&
+        /*APP.isAdmin = privateData?.edPublic &&
                         ApiConfig?.adminKeys?.includes(privateData.edPublic);
-
+*/
         APP.origin = privateData.origin;
         APP.loggedIn = common.isLoggedIn();
         APP.myEdPublic = privateData.edPublic;
@@ -706,6 +765,8 @@ define([
                     return void UI.removeLoadingScreen();
                 }
                 Plans.init(Messages, keys, common);
+                Api._setKeys(keys);
+                APP.adminUI = Admin.init(APP, Plans, Api);
             }));
         }).nThen(waitFor => {
             if (!['subscribe-accounts', 'subscribe-drive'].includes(privateData.category)) {

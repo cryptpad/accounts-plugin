@@ -76,6 +76,45 @@ const factory = (Util, Commands) => {
         });
     };
 
+
+    // ADMIN
+    Api.getAll = (cb) => {
+        post({
+            command: 'ADMIN_GET_ALL'
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+
+    };
+    Api.getSubAdmin = (id, email, key, cb) => {
+        post({
+            command: 'ADMIN_GET_SUB',
+            id, email, key
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+    Api.updateSubAdmin = (data, cb) => {
+        post({
+            command: 'ADMIN_UPDATE_SUB',
+            data
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+    Api.stripeSync = function (id, cb) {
+        post({
+            command: 'ADMIN_FORCE_SYNC',
+            id
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+
     return Api;
 };
 
