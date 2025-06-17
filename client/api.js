@@ -2,6 +2,8 @@
 const factory = (Util, Commands) => {
     const Api = {};
 
+    const saveAs = window.saveAs;
+
     let keys;
     Api._setKeys = _keys => {
         keys = _keys;
@@ -9,9 +11,9 @@ const factory = (Util, Commands) => {
         keys.secretKey = Util.decodeBase64(keys.edPrivate);
     };
 
-    const post = (obj, cb) => {
+    const post = (obj, cb, opts) => {
         if (!keys) { return void cb('MISSING_KEYS'); } 
-        Commands(keys, obj, cb);
+        Commands(keys, obj, cb, opts);
     };
 
     Api.subscribe = (plan, isRegister, cb) => {
@@ -76,6 +78,22 @@ const factory = (Util, Commands) => {
         });
     };
 
+    // DPA
+    Api.downloadDPA = (id, signed, cb) => {
+        post({
+            command: 'DPA_DOWNLOAD',
+            id,
+            signed
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            let name = id ? `CryptPad_DPA_${id}.pdf`
+                        : `CryptPad_DPA.pdf`;
+            saveAs(ret, name);
+            cb();
+        }, {
+            blob: true
+        });
+    };
 
     // ADMIN
     Api.getAll = (cb) => {
@@ -105,9 +123,57 @@ const factory = (Util, Commands) => {
             cb(void 0, ret);
         });
     };
-    Api.stripeSync = function (id, cb) {
+    Api.stripeSync = (id, cb) => {
         post({
             command: 'ADMIN_FORCE_SYNC',
+            id
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+
+    Api.adminGift = (plan, key, note, cb) => {
+        post({
+            command: 'ADMIN_GIFT',
+            plan, key, note
+        }, (err, ret) => {
+            if (err || ret?.error) {
+                return void cb(err || ret?.error);
+            }
+            cb(void 0, ret);
+        });
+    };
+
+    Api.getDpaAdmin = cb => {
+        post({
+            command: 'ADMIN_GET_DPA'
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+    Api.createDpaAdmin = (data, cb) => {
+        post({
+            command: 'ADMIN_CREATE_DPA',
+            data
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+    Api.unsignDpaAdmin = (id, cb) => {
+        post({
+            command: 'ADMIN_UNSIGN_DPA',
+            id
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+    Api.cancelDpaAdmin = (id, cb) => {
+        post({
+            command: 'ADMIN_CANCEL_DPA',
             id
         }, (err, ret) => {
             if (err) { return void cb(err); }
@@ -121,6 +187,7 @@ const factory = (Util, Commands) => {
 define([
     '/common/common-util.js',
     '/accounts/http-command.js',
+    '/components/file-saver/FileSaver.min.js'
 ], factory);
 
 })();

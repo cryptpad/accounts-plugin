@@ -4,25 +4,62 @@ define([
     '/common/common-util.js',
     '/common/clipboard.js',
     '/common/common-interface.js',
+    '/common/common-ui-elements.js',
     '/accounts/app/dpa.js',
     '/accounts/app/stats.js',
-    '/accounts/app/messages.js',
     '/customize/messages.js'
-], ($, h, Util, Clipboard, UI,
-    Dpa, Stats, Messages, MessagesCP) => {
+], ($, h, Util, Clipboard, UI, UIElements,
+    Dpa, Stats, MessagesCP) => {
     const onAdminTab = Util.mkEvent();
 
 
-const init = (APP, Plans, Api) => {
+const init = (APP, Plans, Api, Messages) => {
 
-// XXX
-// Api.getDpaAdmin
-// Api.unsignDpaAdmin
-// Api.cancelDpaAdmin
-// Api.createDpaAdmin
-// Api.getDownloadURL
     const isActive = s => {
         return Plans.ENABLED_STATUS.includes(s);
+    };
+
+    const getGiftTab = ($div) => {
+        const plans = Plans.getAllPlans();
+        let beneficiary, note, button;
+        const plansOptions = plans.map(plan => {
+            return {
+                tag: 'a',
+                attributes: {
+                    'data-value': plan,
+                    href: '#'
+                },
+                content: Util.fixHTML(plan)
+            };
+        });
+        const plansConfig = {
+            text: "Select plan",
+            options: plansOptions,
+            isSelect: true,
+            common: APP.common
+        };
+        const $plan = UIElements.createDropdown(plansConfig);
+        $plan.find('button').addClass('btn btn-secondary');
+        const admin = h('div.cp-accounts-admingift', [
+            h('br'), h('br'),
+            h('h2', "Admin"),
+            $plan[0],
+            beneficiary = h('input', {placeholder: "Beneficiary's key [{user}@{domain}/{key}]"}),
+            note = h('input', {placeholder: "Note"}),
+            h('br'),
+            button = h('button', "Give free subscription"),
+        ]);
+        $(button).on("click", function (e) {
+            const key = $(beneficiary).val();
+            if (!key) { return void UI.alert("Need to specify beneficiary"); }
+            const plan = $plan.getValue();
+            if (!plan) { return void UI.alert("Need to select plan"); }
+            Api.adminGift(plan, key, $(note).val(), err => {
+                if (err) { return void UI.warn(err); }
+                UI.log(MessagesCP.saved);
+            });
+        });
+        $div.append(admin);
     };
 
     const getEditTab = ($div) => {
@@ -396,6 +433,9 @@ const init = (APP, Plans, Api) => {
         $tabs.find('[data-tab="' + tab + '"]').addClass('active');
         $div.empty();
 
+        if (tab === 'gift') {
+            return void getGiftTab($div);
+        }
         if (tab === 'edit') {
             return void getEditTab($div);
         }
@@ -438,6 +478,9 @@ const init = (APP, Plans, Api) => {
             h('span.cp-admin-tab', {
                 'data-tab': 'edit'
             }, Messages.admin_editTab),
+            h('span.cp-admin-tab', {
+                'data-tab': 'gift'
+            }, Messages.admin_giftTab),
             h('span.cp-admin-tab', {
                 'data-tab': 'dpa'
             }, Messages.admin_dpaTab || 'dpa'),

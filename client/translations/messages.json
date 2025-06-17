@@ -21,7 +21,6 @@
     "cancel": "Cancel",
     "accounts_cat_mysubs": "My subscription",
     "admin_subsTab": "Subscriptions",
-    "admin_donationsTab": "Donations",
     "admin_statsTab": "Statistics",
     "admin_editTab": "Edit subscriptions",
 
@@ -135,5 +134,6 @@
     "unknown": "Unknown user",
     "goto_plans": "View all the available plans",
     "goto_mysub": "Manage your subscription",
-    "goto_admin": "Administration"
+    "goto_admin": "Administration",
+    "admin_giftTab": "Give subscription"
 }

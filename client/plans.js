@@ -272,6 +272,12 @@ define([
         const price = (yearly && data.yearly) || data.monthly;
         return price;
     };
+    Plans.getAllPlans = () => {
+        return Object.keys(PlansJSON).filter(plan => {
+            const data = PlansJSON[plan];
+            return data.monthly || data.yearly;
+        });
+    };
 
 
     Plans.init = (_MyMessages, keys, common) => {

@@ -3,16 +3,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 (() => {
-const factory = (nThen, Util, AppConfig, Nacl) => {
+const factory = (nThen, Util, ApiConfig, Nacl) => {
 
-    const API_ORIGIN = AppConfig.accounts_api || '';
-    const DOMAIN = AppConfig.accounts_domain || 'cryptpad.fr';
-
+    const API_ORIGIN = ApiConfig.accounts_api;
+    const url = new URL(ApiConfig.httpUnsafeOrigin);
+    const DOMAIN = url.host;
 
 
     var clone = o => JSON.parse(JSON.stringify(o));
     var randomToken = () => Util.encodeBase64(Nacl.randomBytes(24));
-    var postData = function (url, data, cb) {
+    var postData = function (url, data, cb, opts) {
         var CB = Util.once(Util.mkAsync(cb));
         fetch(url, {
             method: 'POST',
@@ -21,13 +21,17 @@ const factory = (nThen, Util, AppConfig, Nacl) => {
             },
             body: JSON.stringify(data),
         }).then(response => {
-            if (response.ok) {
-
-                return void response.text().then(result => { CB(void 0, Util.tryParse(result)); }); // checkup error when using .json()
-                //return void response.json().then(result => { CB(void 0, result); });
+            if (opts?.blob) {
+                return response.blob().then(result => {
+                    CB(void 0, result);
+                });
             }
 
-            response.json().then().then(result => {
+            if (response.ok) {
+                return void response.text().then(result => { CB(void 0, Util.tryParse(result)); });
+            }
+
+            response.json().then(result => {
                 CB(response.status, result);
             });
             //CB(response.status, response);
@@ -36,7 +40,7 @@ const factory = (nThen, Util, AppConfig, Nacl) => {
         });
     };
 
-    var serverCommand = function (keypair, my_data, _cb) {
+    var serverCommand = function (keypair, my_data, _cb, opts) {
         const cb = Util.mkAsync(_cb);
         if (!API_ORIGIN) { return void cb("ACCOUNTS_API_NOT_SET"); }
 
@@ -87,7 +91,7 @@ const factory = (nThen, Util, AppConfig, Nacl) => {
                     return void cb("RESPONSE_REJECTED", data);
                 }
                 cb(void 0, data);
-            }));
+            }), opts);
         });
     };
 
@@ -97,10 +101,10 @@ const factory = (nThen, Util, AppConfig, Nacl) => {
 define([
     '/components/nthen/index.js',
     '/common/common-util.js',
-    '/customize/application_config.js',
+    '/api/config',
     '/components/tweetnacl/nacl-fast.min.js',
-], (nThen, Util, AppConfig) => {
-    return factory(nThen, Util, AppConfig, window.nacl);
+], (nThen, Util, ApiConfig) => {
+    return factory(nThen, Util, ApiConfig, window.nacl);
 });
 
 })();

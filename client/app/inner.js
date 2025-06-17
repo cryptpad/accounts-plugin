@@ -766,7 +766,7 @@ define([
                 }
                 Plans.init(Messages, keys, common);
                 Api._setKeys(keys);
-                APP.adminUI = Admin.init(APP, Plans, Api);
+                APP.adminUI = Admin.init(APP, Plans, Api, Messages);
             }));
         }).nThen(waitFor => {
             if (!['subscribe-accounts', 'subscribe-drive'].includes(privateData.category)) {

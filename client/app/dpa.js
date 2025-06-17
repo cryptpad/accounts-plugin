@@ -2,9 +2,19 @@ define([
     'jquery',
     '/common/hyperscript.js',
     '/common/common-util.js',
-    '/accounts/app/messages.js',
-    '/customize/messages.js'
-], ($, h, Util, Messages, MessagesCP) => {
+    '/common/common-interface.js',
+    '/customize/messages.js',
+    '/common/extensions.js'
+], ($, h, Util, UI, MessagesCP, Extensions) => {
+
+    let Messages = {};
+    // Get translations from plugin
+    Extensions.getExtensionsSync('TRANSLATIONS').forEach(ext => {
+        try {
+            let m = ext.get('accounts');
+            if (m) { Messages = m; }
+        } catch (e) {}
+    });
 
     const getDpaForm = (Api, hideBtn, isUser, onSubmit) => {
         var nameInput = h('input');
@@ -135,11 +145,12 @@ define([
                 const download = h('button.btn.btn-secondary', Messages.dpa_download);
                 $(download).click(function (e) {
                     e.preventDefault();
-                    var a = h('a', {
-                        href: Api.getDownloadURL(data.pdf_id, Boolean(data.signed_on)),
-                        target:'_blank'
+                    Api.downloadDPA(data.pdf_id, Boolean(data.signed_on), (err, res) => {
+                        if (err) {
+                            console.error(err);
+                            return void UI.warn(MessagesCP.error);
+                        }
                     });
-                    a.click();
                 });
 
                 ([
@@ -173,12 +184,10 @@ define([
                 style: 'display:none;'
             }, dpaForm);
             $(showBtn).click(function () {
-                APP.showDpa = true;
                 $(dpaBlock).show();
                 $(showBtn).hide();
             });
             $(hideBtn).click(function () {
-                APP.showDpa = true;
                 $(dpaBlock).hide();
                 $(showBtn).show();
             });
