@@ -17,15 +17,17 @@ define([
     });
 
     const getDpaForm = (Api, hideBtn, isUser, onSubmit) => {
-        var nameInput = h('input');
-        var representedInput = h('input');
-        var located1Input = h('input', {
+        var nameInput = h('input#cp-dpa-name');
+        var representedInput = h('input#cp-dpa-represented');
+        var located1Input = h('input#cp-dpa-located', {
+            'aria-label': Messages.dpa_loc1_placeholder,
             placeholder: Messages.dpa_loc1_placeholder
         });
         var located2Input = h('input', {
+            'aria-label': Messages.dpa_loc2_placeholder,
             placeholder: Messages.dpa_loc2_placeholder
         });
-        var identificationInput = h('input');
+        var identificationInput = h('input#cp-dpa-id');
         var submit = h('button.btn.btn-primary', Messages.dpa_create);
         var box = isUser ? UI.createCheckbox('cp-dpa-box', Messages.dpa_certify, false) : undefined;
         var language = h('div.cp-accounts-dpa-language', [
@@ -41,14 +43,16 @@ define([
             isUser ? h('span.title', Messages.dpa_title) : undefined,
             isUser ? h('p', Messages.dpa_info) : undefined,
             isUser ? undefined : userKeyInput,
-            h('label', Messages.dpa_name),
+            h('label', {for: 'cp-dpa-name'}, Messages.dpa_name),
             nameInput,
-            h('label', Messages.dpa_represented),
+            h('label', {for: 'cp-dpa-represented'},
+                Messages.dpa_represented),
             representedInput,
-            h('label', Messages.dpa_located),
+            h('label', {for: 'cp-dpa-located'}, Messages.dpa_located),
             located1Input,
             located2Input,
-            h('label', Messages.dpa_identification),
+            h('label', {for: 'cp-dpa-id'},
+                Messages.dpa_identification),
             identificationInput,
             //language,
             box,
@@ -84,6 +88,135 @@ define([
             onSubmit(data);
         });
         return dpaForm;
+    };
+
+    const getDpaUser = (Api, APP) => {
+
+        const content = h('div.cp-accounts-user-dpa');
+        const $div = $(content);
+        let dpaState = false;
+        const metadataMgr = APP.common.getMetadataMgr();
+
+        let redraw = () => {};
+        const draw = (obj) => {
+            $div.empty();
+            if (!obj.allowed) { return; } // No active org plan
+            const data = obj.data;
+
+            const showBtn = h('button.btn.btn-default.cp-show-dpa', [
+                h('i.fa.fa-file-text-o'), Messages.dpa_title
+            ]);
+            $(showBtn).click(() => {
+                dpaState = true;
+                $div.find('.dpa-block').show();
+                $(showBtn).hide();
+            });
+            const hideBtn = h('button.btn.btn-default', [
+                h('i.fa.fa-times'), Messages.closeDetails]);
+            $(hideBtn).click(() => {
+                dpaState = true;
+                $div.find('.dpa-block').hide();
+                $(showBtn).show();
+            });
+            if (APP.showDpa) {
+                $(showBtn).hide();
+            }
+
+            const showDownloadBanner = signed => {
+                const uploadButton = h('button.btn.btn-primary', [
+                    h('i.fa.fa-upload'),
+                    Messages.dpa_sendSigned
+                ]);
+                $(uploadButton).click(() => {
+                    $(h('input', {
+                        type: 'file',
+                        accept: ['.pdf']
+                    })).on('change', e => {
+                        const file = e.target.files[0];
+                        if (file.type !== "application/pdf" ||
+                            !/\.pdf$/.test(file.name)) {
+                            return UI.warn(Messages.dpa_wrongType);
+                        }
+
+                        Api.postSignedDpa(file, (err, res) => {
+                            dpaState = true;
+                            redraw();
+                        });
+                    }).click();
+                });
+
+                const buttonKey = signed ? 'dpa_download'
+                                         : 'dpa_downloadUnsigned';
+                const button = h('button.btn.btn-secondary', [
+                    h('i.fa.fa-download'),
+                    Messages[buttonKey]
+                ]);
+                $(button).click(e => {
+                    Api.downloadDPA(void 0, void 0, (err) => {
+                        if (err) {
+                            console.error(err);
+                            return void UI.warn(MessagesCP.error);
+                        }
+                    });
+                });
+
+                const alertClass = signed ? '.cp-accounts-dpa-form'
+                                          : '.alert.alert-warning';
+                const key = signed ? 'dpa_signed' : 'dpa_generated';
+                const cls = !signed ? '' : '.dpa-block';
+                const privateData = metadataMgr.getPrivateData();
+                const url = privateData.origin + '/support/';
+                const buttons = h('div.cp-dpa-form-buttons',
+                    signed ? [hideBtn, button]
+                           : [button, uploadButton]);
+                $div.append([
+                    showBtn,
+                    h('div.alertdpa'+alertClass+cls, [
+                        signed ? h('div.title', Messages.dpa_title)
+                               : undefined,
+                        UI.setHTML(h('p'),
+                        Messages._getKey(key, [url])),
+                        buttons
+                    ])
+                ]);
+                $div.find('a').click(e => {
+                    e.preventDefault();
+                    const url = $(e.target).attr('href');
+                    console.error(url);
+                    APP.common.gotoURL(url);
+                });
+                if (dpaState) { $div.find('.alertdpa').show(); }
+            };
+            if (!obj.new && data && data.signed_on) {
+                return void showDownloadBanner(true);
+            }
+
+            if (!obj.new && data) { // DPA already generated
+                APP.showDpa = true;
+                $(showBtn).hide();
+                return void showDownloadBanner(false);
+            }
+
+            const dpaForm = getDpaForm(Api, hideBtn, true, data => {
+                Api.createDpa(data, () => {
+                    redraw();
+                });
+            });
+
+            $div.append([
+                showBtn,
+                dpaForm
+            ]);
+        };
+        redraw = () => {
+            Api.getDpa((err, obj) => {
+                if (err) { return; }
+                draw(obj);
+            });
+        };
+        redraw();
+
+        return content;
     };
 
     const getDpaAdmin = (Api, $div, table, onAdminTab) => {
@@ -167,7 +300,7 @@ define([
             res.forEach(addRow);
 
 
-            const showBtn = h('button.btn.btn-default', [
+            const showBtn = h('button.btn.btn-default.cp-show-dpa', [
                 h('i.fa.fa-file-text-o'), Messages.dpa_title
             ]);
             const hideBtn = h('button.btn.btn-default', [
@@ -201,6 +334,7 @@ define([
 
     return {
         getDpaForm,
-        getDpaAdmin
+        getDpaAdmin,
+        getDpaUser
     };
 });

@@ -29,25 +29,23 @@ const init = (APP, Plans, Api, Messages) => {
                     'data-value': plan,
                     href: '#'
                 },
-                content: Util.fixHTML(plan)
+                content: Util.fixHTML(Plans.getPlanName(plan))
             };
         });
         const plansConfig = {
             text: "Select plan",
             options: plansOptions,
+            caretDown: true,
             isSelect: true,
+            buttonCls: 'btn',
             common: APP.common
         };
         const $plan = UIElements.createDropdown(plansConfig);
-        $plan.find('button').addClass('btn btn-secondary');
         const admin = h('div.cp-accounts-admingift', [
-            h('br'), h('br'),
-            h('h2', "Admin"),
             $plan[0],
             beneficiary = h('input', {placeholder: "Beneficiary's key [{user}@{domain}/{key}]"}),
             note = h('input', {placeholder: "Note"}),
-            h('br'),
-            button = h('button', "Give free subscription"),
+            button = h('button.btn.btn-primary', "Give free subscription"),
         ]);
         $(button).on("click", function (e) {
             const key = $(beneficiary).val();
@@ -73,7 +71,7 @@ const init = (APP, Plans, Api, Messages) => {
         var getKeyInput = h('input.cp-admin-edit-fromkey', {
             type: 'text'
         });
-        var getFormSubmit = h('button', "Find subscription(s)");
+        var getFormSubmit = h('button.btn.btn-default', "Find subscription(s)");
         var getResult = h('div.cp-admin-edit-found');
         var getForm = h('div.cp-admin-edit-getform', [
             h('h3', "Get a subscription"),
@@ -142,9 +140,9 @@ const init = (APP, Plans, Api, Messages) => {
                 ]);
             }))).appendTo($editForm);
 
-            var queryButton = h('button', 'Force sync with Stripe');
-            var updateButton = h('button', 'Update limits in CryptPad.fr');
-            var saveButton = h('button', 'Save changes');
+            var queryButton = h('button.btn', 'Force sync with Stripe');
+            var updateButton = h('button.btn.btn-default', 'Update limits in CryptPad.fr');
+            var saveButton = h('button.btn.btn-primary', 'Save changes');
 
             $(h('div.cp-admin-edit-form-actions', [
                 saveButton,
@@ -211,7 +209,7 @@ const init = (APP, Plans, Api, Messages) => {
                     return void displayError('Not found');
                 }
                 $getResult.html('');
-                var table = h('table', [
+                var table = h('table.subscription-table.cp-edit', [
                     h('tr', ['id', 'email', 'benificiary_user', 'plan', 'create_time', 'end_time'].map(function (i) {
                         return h('th.head-'+i, Messages[i] || i);
                     }))
@@ -269,7 +267,7 @@ const init = (APP, Plans, Api, Messages) => {
         }
 
         let n = nDisplayed;
-        let button = h('button.btn-primary', MessagesCP.ui_more);
+        let button = h('button.btn.btn-default.cp-stats-more', MessagesCP.ui_more);
         let showMore = () => {
             for (var i=n; i<(n+nDisplayed); i++) {
                 addRow(Stats.getTableStats(data, i));
@@ -338,10 +336,11 @@ const init = (APP, Plans, Api, Messages) => {
                 const c = Plans.getPlanPrice(sub.plan);
                 cost = Messages._getKey('pricePer'+(Plans.isYearly(sub.plan) ? 'Year' : 'Month'), [c]);
             }
-            const key = h('button.fa.fa-key');
+            const key = h('button.btn.fa.fa-key.cp-copy-key');
             $(key).click(function () {
-                var s = Clipboard.copy(sub.benificiary_pubkey);
-                if (s) { UI.log('Copied to clipboard'); }
+                Clipboard.copy(sub.benificiary_pubkey, err => {
+                    UI.log('Copied to clipboard');
+                });
             });
             planMsg += cost ? ' ' + cost : '';
             const tr = h('tr');
@@ -383,7 +382,7 @@ const init = (APP, Plans, Api, Messages) => {
 
         subs.forEach(addRow);
 
-        var $buttons = $('<div class="buttons">').appendTo($div);
+        var $buttons = $(h('div.cp-admin-buttons')).appendTo($div);
 
         var $adminBox;
         var $inactiveBox = $(UI.createCheckbox('cp-admin-showinactive', Messages.show_inactive_only,
@@ -406,7 +405,6 @@ const init = (APP, Plans, Api, Messages) => {
             onAdminTab.fire('subs', opts, data);
         }).appendTo($buttons);
 
-        Messages.show_admin_only = "Show admin gifts only"; // XXX
         $adminBox = $(UI.createCheckbox('cp-admin-showgifts', Messages.show_admin_only,
             opts.adminGifts, {
             label: { class: 'noTitle' }
@@ -419,11 +417,6 @@ const init = (APP, Plans, Api, Messages) => {
             onAdminTab.fire('subs', opts, data);
         }).appendTo($buttons);
 
-        $div.append([
-            $inactiveBox[0],
-            h('br'),
-            $giftsBox[0]
-        ]);
     };
 
     var displayAdmin = function ($tabs, $div, data, tab, opts) {
@@ -440,7 +433,7 @@ const init = (APP, Plans, Api, Messages) => {
             return void getEditTab($div);
         }
 
-        var $table = $('<table class="table-bordered subscription-table">').appendTo($div);
+        var $table = $('<table class="subscription-table">').appendTo($div);
         var $headTr = $('<tr>').appendTo($table);
         var addCell = function (tr) {
             const $tr = $(tr);
@@ -485,7 +478,7 @@ const init = (APP, Plans, Api, Messages) => {
                 'data-tab': 'dpa'
             }, Messages.admin_dpaTab || 'dpa'),
         ]);
-        var content = h('div');
+        var content = h('div.cp-admin-content-container');
         var div = h('div', [
             tabs,
             content

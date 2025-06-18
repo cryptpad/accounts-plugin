@@ -79,6 +79,34 @@ const factory = (Util, Commands) => {
     };
 
     // DPA
+    Api.getDpa = (cb) => {
+        post({
+            command: 'DPA_GET'
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+    Api.createDpa = (data, cb) => {
+        post({
+            command: 'DPA_CREATE',
+            data
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        });
+    };
+    Api.postSignedDpa = (file, cb) => {
+        post({
+            command: 'DPA_SIGN',
+            file
+        }, (err, ret) => {
+            if (err) { return void cb(err); }
+            cb(void 0, ret);
+        }, {
+            upload: true
+        });
+    };
     Api.downloadDPA = (id, signed, cb) => {
         post({
             command: 'DPA_DOWNLOAD',
@@ -91,7 +119,7 @@ const factory = (Util, Commands) => {
             saveAs(ret, name);
             cb();
         }, {
-            blob: true
+            download: true
         });
     };
 
@@ -103,7 +131,6 @@ const factory = (Util, Commands) => {
             if (err) { return void cb(err); }
             cb(void 0, ret);
         });
-
     };
     Api.getSubAdmin = (id, email, key, cb) => {
         post({

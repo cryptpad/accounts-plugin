@@ -13,6 +13,7 @@ define([
     '/customize/messages.js',
     '/common/extensions.js',
     '/accounts/app/admin.js',
+    '/accounts/app/dpa.js',
     '/accounts/plans.js',
     '/accounts/api.js',
 
@@ -34,6 +35,7 @@ define([
     MessagesCP,
     Extensions,
     Admin,
+    Dpa,
     Plans,
     Api
     )
@@ -121,6 +123,11 @@ define([
             Plans.getPlansAccounts(APP.myPlan?.plan)
         ]);
     };
+
+    const getDpa = () => {
+        return Dpa.getDpaUser(Api, APP);
+    };
+
     const getSubData = () => {
         const metadataMgr = common.getMetadataMgr();
         const privData = metadataMgr.getPrivateData();
@@ -143,7 +150,7 @@ define([
         common.displayAvatar($avatar, userData.avatar, userData.name);
 
         // Gifted sub: don't show stripe buttons and price
-        if (APP.myPlan?.shared && APP.myPlan.owner) {
+        if (APP.myPlan?.shared && APP.myPlan?.owner) {
             const owner = APP.myPlan.owner;
             const ownerData = findUserTeam(owner);
             const ownerName = ownerData?.displayName
@@ -192,7 +199,6 @@ define([
                 user,
                 plan
             ]);
-
         }
 
 
@@ -622,6 +628,7 @@ define([
             getHeader(),
             getSubData(),
             getStorage(),
+            getDpa(),
             getDrives()
         ]);
     };
@@ -669,7 +676,6 @@ define([
         firing = true;
         Api.getMySub((err, val) => {
             firing = false;
-            console.error(err, val);
             APP.myPlan = val;
             APP.isAdmin = val.isAdmin;
             andThen(forceCat);

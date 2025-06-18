@@ -51,9 +51,7 @@
     "dpa_en": "English",
     "dpa_fr": "French",
     "dpa_de": "German",
-
-
-
+    "closeDetails": "Close",
     "id": "ID",
     "plan": "Plan",
     "benificiary": "Beneficiary",
@@ -61,7 +59,6 @@
     "created": "Created",
     "ended": "End Date",
     "notes": "Notes",
-
     "stats_month": "Month",
     "stats_totalSubs": "Active subscriptions",
     "stats_newSubs": "New subscriptions",
@@ -78,14 +75,16 @@
     "stats_monthlyRevenue": "Monthly subscriptions revenue: ",
     "stats_yearlyRevenue": "Yearly subscriptions revenue: ",
     "stats_note": "(*) Estimated revenue if nobody cancels before their monthly renewal and nobody subscribes",
-    "stats_estimation": "Estimated revenue for the next 12 months: ",
     "show_active_only": "Show active subscriptions only",
     "show_inactive_only": "Show cancelled subscriptions only",
     "show_gifts": "Show free subscriptions (admin gift or extra subscription)",
 
+
+
     "offeredWithPlan": "Offered with a premium plan",
     "pricePerMonth": "{0}€/month",
     "pricePerYear": "{0}€/year",
+    "stats_estimation": "Estimated revenue for a year: ",
 
 
     "freetitle": "Free",
@@ -135,5 +134,6 @@
     "goto_plans": "View all the available plans",
     "goto_mysub": "Manage your subscription",
     "goto_admin": "Administration",
-    "admin_giftTab": "Give subscription"
+    "admin_giftTab": "Give subscription",
+    "show_admin_only": "Show admin gifts only"
 }
