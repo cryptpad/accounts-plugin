@@ -665,8 +665,8 @@ define([
         firing = true;
         Api.getMySub((err, val) => {
             firing = false;
-            APP.myPlan = val;
-            APP.isAdmin = val.isAdmin;
+            APP.myPlan = val?.plan ? val : false;
+            APP.isAdmin = val?.isAdmin;
             andThen(forceCat);
         });
     });
@@ -772,9 +772,9 @@ define([
             onSuccess(privateData.category, waitFor());
         }).nThen(() => {
             evOnRefresh.fire();
+            UI.removeLoadingScreen();
             metadataMgr.onChange(() => {
                 evOnRefresh.fire(true);
-                UI.removeLoadingScreen();
             });
         });
     });
