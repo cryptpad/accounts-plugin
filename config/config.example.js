@@ -13,4 +13,4 @@ module.exports = {
      *   2. make sure the IP of the server sending the request matches the IP of the subdomain provided
      **/
     cryptpadAPISubdomain: ""
-}
+};

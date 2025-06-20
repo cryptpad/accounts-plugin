@@ -23,8 +23,6 @@
     "admin_subsTab": "Subscriptions",
     "admin_statsTab": "Statistics",
     "admin_editTab": "Edit subscriptions",
-
-
     "dpa_link": "Organization plans include a <b>Data Processing Agreement</b>. <a href=\"{0}\" target=\"_blank\">Preview this document</a> and generate a personalized version once subscribed.",
     "dpa_title": "Data Protection Agreement (DPA)",
     "dpa_signed": "A DPA has been signed for this subscription. You can download it by clicking on the button below. Please contact us through the <a href=\"{0}\">Support page</a> if you want to update your organization information.",

@@ -61,7 +61,6 @@ let refreshTime = 0;
 const cacheDuration = 10*1000;
 const retryDelay = 5*1000;
 const getJSON = cb => {
-    let tries = 0;
     // JSON exists and is recent: serve it
     if (refreshTime && refreshTime > +new Date()) {
         if (!json) { return void cb('NO_JSON'); }

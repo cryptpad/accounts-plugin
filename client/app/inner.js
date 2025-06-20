@@ -130,12 +130,10 @@ define([
 
     const getSubData = () => {
         const metadataMgr = common.getMetadataMgr();
-        const privData = metadataMgr.getPrivateData();
         const userData = metadataMgr.getUserData();
         const planId = APP.myPlan.plan;
         const yearly = APP.myPlan.yearly;
         const canceled = APP.myPlan.canceled;
-        const planData = Plans.getPlanData(planId);
 
         const renewal = new Date(APP.myPlan.renewal);
         const renewDate = renewal?.toLocaleDateString(void 0, {
@@ -267,8 +265,6 @@ define([
         ]);
     };
     const getStorage = () => {
-        const metadataMgr = common.getMetadataMgr();
-        const privData = metadataMgr.getPrivateData();
         const planId = APP.myPlan.plan;
         const planData = Plans.getPlanData(planId);
 
@@ -286,7 +282,7 @@ define([
         const $usage = $(bar).find('.cp-usage-bar');
         const showUsage = data => {
             const usedGB = UIElements.prettySize(data.usage);
-            const percent = Math.round(1000*data.usage/data.limit)/10
+            const percent = Math.round(1000*data.usage/data.limit)/10;
             $(bar).css('display', 'flex');
             $usage.css('width', `${percent}%`);
             used.innerText = Messages._getKey('mysub_used', [
@@ -355,8 +351,6 @@ define([
         const list = h('div.cp-accounts-drives-list');
 
         let addAdded = false;
-
-        const friends = common.getFriends(true);
 
         const addHandlers = (profile, remove, subId, userData) => {
             Util.onClickEnter($(profile), () => {
@@ -584,14 +578,13 @@ define([
                 title: Messages.from_key,
                 icon: 'fa fa-key',
                 active: false
-            }]
+            }];
 
             UI.openCustomModal(UI.dialog.tabs(tabs), {
                 wide: true
             });
 
         };
-        const driveModal = UI.customModal
 
         // Make sure we can always manage all drives, even if we
         // somehow go over the limit
@@ -614,7 +607,7 @@ define([
                         }
                         evOnRefresh.fire();
                     });
-                })
+                });
             });
         }
 
@@ -633,14 +626,10 @@ define([
         ]);
     };
 
-    const getAdminTables = () => {
-
-    };
     const getAdmin = () => {
         return h('div', [
             getHeader(),
             APP.adminUI.create()
-            //getAdminTables()
         ]);
     };
 
@@ -738,13 +727,14 @@ define([
         APP.toolbar.$rightside.hide();
     };
 
+    let sframeChan;
     nThen(function (waitFor) {
         $(waitFor(UI.addLoadingScreen));
         SFCommon.create(waitFor(function (c) { APP.common = common = c; }));
     }).nThen(function (waitFor) {
         APP.$toolbar = $('#cp-toolbar');
-        sFrameChan = common.getSframeChannel();
-        sFrameChan.onReady(waitFor());
+        sframeChan = common.getSframeChannel();
+        sframeChan.onReady(waitFor());
     }).nThen(function (/*waitFor*/) {
         createToolbar();
         var metadataMgr = APP.metadataMgr = common.getMetadataMgr();
@@ -765,7 +755,7 @@ define([
         }
 
         nThen(waitFor => {
-            sFrameChan.query('ACCOUNTS_GET_KEYS', null, waitFor((err, keys) => {
+            sframeChan.query('ACCOUNTS_GET_KEYS', null, waitFor((err, keys) => {
                 if (err) {
                     console.error(err);
                     return void UI.removeLoadingScreen();

@@ -47,7 +47,7 @@ const init = (APP, Plans, Api, Messages) => {
             note = h('input', {placeholder: "Note"}),
             button = h('button.btn.btn-primary', "Give free subscription"),
         ]);
-        $(button).on("click", function (e) {
+        $(button).on("click", () => {
             const key = $(beneficiary).val();
             if (!key) { return void UI.alert("Need to specify beneficiary"); }
             const plan = $plan.getValue();
@@ -141,14 +141,12 @@ const init = (APP, Plans, Api, Messages) => {
             }))).appendTo($editForm);
 
             var queryButton = h('button.btn', 'Force sync with Stripe');
-            var updateButton = h('button.btn.btn-default', 'Update limits in CryptPad.fr');
             var saveButton = h('button.btn.btn-primary', 'Save changes');
 
             $(h('div.cp-admin-edit-form-actions', [
                 saveButton,
                 h('br'),
-                queryButton,
-                updateButton
+                queryButton
             ])).appendTo($editForm);
 
             $(saveButton).click(function () {
@@ -180,16 +178,6 @@ const init = (APP, Plans, Api, Messages) => {
                     $editForm.html('<div class="cp-admin-edit-saved">Success</div>');
                 });
             });
-
-            $(updateButton).click(function () {
-                $editForm.html('<span class="cp-spinner fa fa-spinner fa-pulse fa-3x fa-fw"></span>');
-                updateLimit(function (err) {
-                    if (err) {
-                        return void UI.alert(Messages._getKey('cantUpdateLimit', ['CryptPad']));
-                    }
-                    $editForm.html('<div class="cp-admin-edit-saved">Success</div>');
-                });
-            });
         };
 
         // Submit "get subscription" form
@@ -213,9 +201,6 @@ const init = (APP, Plans, Api, Messages) => {
                     h('tr', ['id', 'email', 'benificiary_user', 'plan', 'create_time', 'end_time'].map(function (i) {
                         return h('th.head-'+i, Messages[i] || i);
                     }))
-                ]);
-                var result = h('div.cp-admin-edit-result', [
-                    table
                 ]);
                 var $table = $(table).appendTo($getResult);
                 res.forEach(function (sub) {
@@ -274,7 +259,6 @@ const init = (APP, Plans, Api, Messages) => {
             }
             n += nDisplayed;
         };
-        let $button = $(button).insertAfter(table.$table);
         Util.onClickEnter($(button), showMore);
     };
 
@@ -338,7 +322,7 @@ const init = (APP, Plans, Api, Messages) => {
             }
             const key = h('button.btn.fa.fa-key.cp-copy-key');
             $(key).click(function () {
-                Clipboard.copy(sub.benificiary_pubkey, err => {
+                Clipboard.copy(sub.benificiary_pubkey, () => {
                     UI.log('Copied to clipboard');
                 });
             });
@@ -388,7 +372,7 @@ const init = (APP, Plans, Api, Messages) => {
         var $inactiveBox = $(UI.createCheckbox('cp-admin-showinactive', Messages.show_inactive_only,
             opts.showInactive, {
             label: { class: 'noTitle' }
-        })).click(function (ev) {
+        })).click(() => {
             $adminBox.find('input').prop('checked', false);
             opts.adminGifts = false;
             opts.showInactive = !Util.isChecked($inactiveBox.find('input'));
@@ -398,7 +382,7 @@ const init = (APP, Plans, Api, Messages) => {
         var $giftsBox = $(UI.createCheckbox('cp-admin-showgifts', Messages.show_gifts,
             opts.showGifts, {
             label: { class: 'noTitle' }
-        })).click(function (ev) {
+        })).click(() => {
             $adminBox.find('input').prop('checked', false);
             opts.adminGifts = false;
             opts.showGifts = !Util.isChecked($giftsBox.find('input'));
@@ -408,7 +392,7 @@ const init = (APP, Plans, Api, Messages) => {
         $adminBox = $(UI.createCheckbox('cp-admin-showgifts', Messages.show_admin_only,
             opts.adminGifts, {
             label: { class: 'noTitle' }
-        })).click(function (ev) {
+        })).click(() => {
             $inactiveBox.find('input').prop('checked', false);
             $giftsBox.find('input').prop('checked', false);
             opts.showGifts = false;

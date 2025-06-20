@@ -30,12 +30,14 @@ define([
         var identificationInput = h('input#cp-dpa-id');
         var submit = h('button.btn.btn-primary', Messages.dpa_create);
         var box = isUser ? UI.createCheckbox('cp-dpa-box', Messages.dpa_certify, false) : undefined;
+        /*
         var language = h('div.cp-accounts-dpa-language', [
             h('label', Messages.dpa_language),
             UI.createRadio('dpa-language', 'cp-accounts-dpa-en', Messages.dpa_en, true),
             UI.createRadio('dpa-language', 'cp-accounts-dpa-fr', Messages.dpa_fr),
             UI.createRadio('dpa-language', 'cp-accounts-dpa-de', Messages.dpa_de),
         ]);
+        */
         var userKeyInput = h('input', {
             placeholder: MessagesCP.settings_publicSigningKey
         });
@@ -138,7 +140,7 @@ define([
                             return UI.warn(Messages.dpa_wrongType);
                         }
 
-                        Api.postSignedDpa(file, (err, res) => {
+                        Api.postSignedDpa(file, () => {
                             dpaState = true;
                             redraw();
                         });
@@ -151,7 +153,7 @@ define([
                     h('i.fa.fa-download'),
                     Messages[buttonKey]
                 ]);
-                $(button).click(e => {
+                $(button).click(() => {
                     Api.downloadDPA(void 0, void 0, (err) => {
                         if (err) {
                             console.error(err);
@@ -237,11 +239,6 @@ define([
             const addRow = data => {
                 const tr = h('tr');
 
-                const baseUrl = '/accounts/dpa/' + data.pdf_id;
-                const signedUrl = baseUrl + '_signed.pdf';
-                const unsignedUrl = baseUrl + '.pdf';
-                const url = data.signed_on ? signedUrl : unsignedUrl;
-
                 let deleteSigned = h('button.btn.btn-danger', [
                     h('i.fa.fa-trash'),
                     h('span', Messages.dpa_deleteSigned)
@@ -278,7 +275,7 @@ define([
                 const download = h('button.btn.btn-secondary', Messages.dpa_download);
                 $(download).click(function (e) {
                     e.preventDefault();
-                    Api.downloadDPA(data.pdf_id, Boolean(data.signed_on), (err, res) => {
+                    Api.downloadDPA(data.pdf_id, Boolean(data.signed_on), (err) => {
                         if (err) {
                             console.error(err);
                             return void UI.warn(MessagesCP.error);

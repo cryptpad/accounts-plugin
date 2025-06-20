@@ -3,11 +3,9 @@ define([
     '/components/nthen/index.js',
     '/api/config',
     '/common/dom-ready.js',
-    '/common/requireconfig.js',
     '/customize/messages.js',
     '/common/sframe-common-outer.js',
-], function (nThen, ApiConfig, DomReady, RequireConfig, Messages, SFCommonO) {
-    var requireConfig = RequireConfig();
+], function (nThen, ApiConfig, DomReady, Messages, SFCommonO) {
 
     // Loaded in load #2
     nThen(function (waitFor) {

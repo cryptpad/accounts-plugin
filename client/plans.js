@@ -135,7 +135,7 @@ define([
             }
 
             let p = isYearly ? Math.round(100*priceYear / 12) / 100
-                             : data.monthly
+                             : data.monthly;
             let cent;
             if (String(p).includes('.')) {
                 const s = String(p).split('.');

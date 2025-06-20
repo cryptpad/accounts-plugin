@@ -188,7 +188,7 @@ define([
                             LocalStore.isLoggedIn() ? undefined : h('div.cp-note', Messages.features_f_subscribe_note)
                         ]),
                     ]),
-                ])
+                ]);
             }
         }];
 
