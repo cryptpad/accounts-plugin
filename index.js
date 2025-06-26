@@ -80,6 +80,7 @@ const getJSON = cb => {
 
 };
 
+/*
 Accounts.addHttpEndpoints = (Env, app) => {
     let dir = Path.join(__dirname, 'client');
     app.get('/accounts/plans.json', (req, res) => {
@@ -99,6 +100,7 @@ Accounts.addHttpEndpoints = (Env, app) => {
         json = value;
     });
 };
+*/
 
 Accounts.customizeEnv = Env => {
     Env.accounts_api = config?.accountsOrigin;
