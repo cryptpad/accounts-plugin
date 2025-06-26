@@ -80,6 +80,10 @@ const getJSON = cb => {
 
 };
 
+Accounts.addHttpEndpoints = (Env, app) => {
+    let dir = Path.join(__dirname, 'client');
+    app.use('/accounts', Express.static(dir));
+};
 /*
 Accounts.addHttpEndpoints = (Env, app) => {
     let dir = Path.join(__dirname, 'client');
