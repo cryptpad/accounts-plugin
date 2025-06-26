@@ -18,7 +18,8 @@ define([
             }
         }];
         extensions.POST_REGISTER = [{
-            getContent: (keys) => {
+            getContent: (data) => {
+                const keys = Util.clone(data?.proxy || data);
                 Plans.init(MyMessages, keys, void 0);
                 return Plans.getPlansRegister();
             }
