@@ -1,13 +1,12 @@
 define([
     '/api/config',
     'jquery',
-    '/accounts/plans.js',
     '/common/common-util.js',
     '/common/common-interface.js',
     '/common/outer/local-store.js',
     '/common/hyperscript.js',
     '/customize/messages.js'
-], function (ApiConfig, $, Plans, Util, UI, LocalStore, h, Messages) {
+], function (ApiConfig, $, Util, UI, LocalStore, h, Messages) {
     return function (MyMessages) {
         const extensions = {};
 
@@ -15,12 +14,6 @@ define([
             get: (name) => {
                 if (name !== 'accounts') { return; }
                 return MyMessages;
-            }
-        }];
-        extensions.POST_REGISTER = [{
-            getContent: (keys) => {
-                Plans.init(MyMessages, keys, void 0);
-                return Plans.getPlansRegister();
             }
         }];
 
