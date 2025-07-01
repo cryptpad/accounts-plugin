@@ -10,6 +10,8 @@ define([
     return function (MyMessages) {
         const extensions = {};
 
+        MyMessages.link_name = Messages.settings_cat_subscription;
+
         extensions.TRANSLATIONS = [{
             get: (name) => {
                 if (name !== 'accounts') { return; }
