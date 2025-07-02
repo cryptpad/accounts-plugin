@@ -293,14 +293,22 @@ define([
     };
 
     const listPlans = (org, isRegister, myPlan) => {
+        const all = Object.keys(PlansJSON)
+        .filter(k => (!!PlansJSON[k].org === org))
+        .map(k => {
+            const card = makeCard(k, isRegister, myPlan);
+            return card;
+        });
+        const list = [];
+        while (all.length) {
+            list.push(h('div.cp-accounts-list-group', [
+                all.shift(),
+                all.shift()
+            ]));
+        }
         return h('div.cp-accounts-list', [
             org ? makeOrgTitle() : makeToggle(),
-            Object.keys(PlansJSON)
-            .filter(k => (!!PlansJSON[k].org === org))
-            .map(k => {
-                const card = makeCard(k, isRegister, myPlan);
-                return card;
-            })
+            list
         ]);
     };
 
