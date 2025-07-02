@@ -18,7 +18,7 @@
     "accountsPage": "Subscription",
     "gift_note": "Gift note (optional)",
     "gift_note_label": "Add a personal note for the beneficiary.",
-    "cancel": "Cancel",
+    "cancel": "Cancel subscription",
     "accounts_cat_mysubs": "My subscription",
     "admin_subsTab": "Subscriptions",
     "admin_statsTab": "Statistics",
@@ -128,10 +128,12 @@
     "team_drive": "Team drive",
     "free": "Free",
     "shared_by": "Subscription shared by",
+    "gifted_by": "Subscription offered by",
     "unknown": "Unknown user",
     "goto_plans": "View all the available plans",
     "goto_mysub": "Manage your subscription",
     "goto_admin": "Administration",
     "admin_giftTab": "Give subscription",
-    "show_admin_only": "Show admin gifts only"
+    "show_admin_only": "Show admin gifts only",
+    "confirmCancel": "Do you want want to cancel the free subscription that was shared with you?"
 }

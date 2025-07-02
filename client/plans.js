@@ -98,6 +98,30 @@ define([
         }
         window.location.href = url;
     };
+    const onPlanUpdate = (plan, isGiftedPlan) => {
+        if (plan === "free" && isGiftedPlan) {
+            // The user wants to cancel their gifted plan
+            UI.confirm(MyMessages.confirmCancel, yes => {
+                if (!yes) { return; }
+                Api.cancelGift(isGiftedPlan, err => {
+                    if (err) {
+                        console.error(err);
+                        return void UI.warn(Messages.error);
+                    }
+                    gotoURL(''); // reload
+                });
+            });
+            return;
+        }
+        // Update a paid plan: show "cancel" page if switching to free
+        Api.stripePortal(plan !== "free", (err, val) => {
+            if (err) {
+                console.error(err);
+                return void UI.alert(Messages.error);
+            }
+            gotoURL(val);
+        });
+    };
     const onPlanPicked = (plan, isRegister) => {
         Api.subscribe(plan, Boolean(isRegister), (err, url) => {
             if (err || !url) {
@@ -108,7 +132,8 @@ define([
             gotoURL(url?.permalink);
         });
     };
-    const makeCard = (plan, isRegister, isMyPlan) => {
+    const makeCard = (plan, isRegister, myPlanData) => {
+        console.error(myPlanData);
         const data = PlansJSON[plan];
         if (!data) { return; }
 
@@ -177,25 +202,57 @@ define([
         }
 
         // Buttons
+        /** Handle all cases:
+         *    - /accounts
+         *      - Guest: register buttons
+         *      - Paid user: "Your plan" and "Switch plan"
+         *      - Free user: "Your plan" and "Pick this plan"
+         *      - Cloud button: "Test CryptPad Cloud"
+         *    - /register
+         *      - "Continue for free" and "Pick this plan"
+         **/
+        const myPlan = myPlanData?.plan;
+        const isGiftedPlan = (myPlanData?.shared ||
+                              myPlanData?.adminGift) ?
+                            myPlanData?.id : false;
+        const isMyPlan = plan === myPlan ||
+                         (!myPlan && plan === "free");
+        const isPremiumUser = !!myPlan;
         const loggedIn = isRegister || sfCommon?.isLoggedIn();
-        const freeTxt = loggedIn ? MyMessages.noPlan
-                                    : Messages.register_header;
-        const mainTxt = isMyPlan ? MyMessages.yourPlan
-                            : (loggedIn ? MyMessages.pickPlan
-                                    : Messages.register_header);
-        const attr = isMyPlan ? { disabled: 'disabled' } : {};
+        let buttonTxt = MyMessages.pickPlan;
+        if (isRegister) {
+            // /register - free
+            if (!paid) {
+                buttonTxt = MyMessages.noPlan;
+            }
+        } else {
+            // /accounts
+            if (data.cloud) { // cloud offer
+                buttonTxt = MyMessages.tryCloud;
+            } else if (!loggedIn) { // guests
+                buttonTxt = Messages.register_header;
+            } else if (isMyPlan) { // your plan
+                buttonTxt = MyMessages.yourPlan;
+            } else if (!isPremiumUser) { // free user, paid plan
+            } else {
+                buttonTxt = MyMessages.stripe_switch;
+            }
+        }
+
+        const attr = (isMyPlan && loggedIn) ? { disabled: 'disabled' } : {};
         const mainBtn = h('button.btn.btn-default.cp-colored', attr, [
-            paid ? mainTxt : (
-                data.cloud ? MyMessages.tryCloud : freeTxt
-            )
+            buttonTxt
         ]);
-        const altBtn = (plan === "free" && !isRegister)
+        const altBtn = (plan === "free" && !isRegister && loggedIn)
                 ? h('button.btn.btn-secondary', MyMessages.buttons_donate)
                 : undefined;
 
         Util.onClickEnter($(mainBtn), () => {
             if (data.cloud) { // Contact
-                // TODO XXX redirect
+                return gotoURL(data.url);
+            }
+            if (isPremiumUser) { // Update your sub
+                return onPlanUpdate(plan, isGiftedPlan);
             }
             if (!paid || !loggedIn) { // Free plan
                 return gotoURL(isRegister ? '/drive' : '/register');
@@ -241,7 +298,7 @@ define([
             Object.keys(PlansJSON)
             .filter(k => (!!PlansJSON[k].org === org))
             .map(k => {
-                const card = makeCard(k, isRegister, k === myPlan);
+                const card = makeCard(k, isRegister, myPlan);
                 return card;
             })
         ]);

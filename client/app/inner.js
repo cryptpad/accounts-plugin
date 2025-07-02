@@ -120,7 +120,7 @@ define([
     const getPlans = () => {
         return h('div', [
             getHeader(),
-            Plans.getPlansAccounts(APP.myPlan?.plan)
+            Plans.getPlansAccounts(APP.myPlan)
         ]);
     };
 
@@ -148,7 +148,8 @@ define([
         common.displayAvatar($avatar, userData.avatar, userData.name);
 
         // Gifted sub: don't show stripe buttons and price
-        if (APP.myPlan?.shared && APP.myPlan?.owner) {
+        const gifted = APP.myPlan?.shared || APP.myPlan?.adminGift;
+        if (gifted && APP.myPlan?.owner) {
             const owner = APP.myPlan.owner;
             const ownerData = findUserTeam(owner);
             const ownerName = ownerData?.displayName
@@ -159,10 +160,13 @@ define([
             common.displayAvatar($(ownerAvatar),
                                 ownerData?.avatar, '?');
 
+            const byTxt = APP.myPlan?.shared ?
+                            Messages.shared_by :
+                            Messages.gifted_by;
             const user = h('div.cp-accounts-user', [
                 h('span.cp-accounts-username', userData.name),
                 h('div.cp-accounts-usershared', [
-                    h('label', Messages.shared_by),
+                    h('label', byTxt),
                     h('div.cp-accounts-sharedby', [
                         ownerAvatar,
                         h('span', ownerName || Messages.unknown)
