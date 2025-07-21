@@ -83,7 +83,7 @@
             margin: 15px 0;
         }
 
-        .cp-accounts-mysub-header, .cp-accounts-mysub, .cp-accounts-storage, .cp-accounts-drives, .cp-accounts-user-dpa {
+        .cp-accounts-mysub, .cp-accounts-storage, .cp-accounts-drives, .cp-accounts-user-dpa {
             width: @content-width;
             max-width: ~"calc(100vw - 10px)";
         }
@@ -93,13 +93,7 @@
                 display: none;
             }
         }
-        .cp-accounts-mysub-header {
-            margin-bottom: 10px;
-            padding-left: 20px;
-            .cp-accounts-title {
-                font-size: 36px;
-                text-align: center;
-            }
+        .cp-accounts-mysub-header, .cp-accounts-mysub-allplans {
             .cp-accounts-links {
                 display: flex;
                 flex-flow: column;
@@ -110,12 +104,21 @@
                 }
                 color: @cryptpad_color_link;
             }
+            button {
+                align-self: center;
+            }
+        }
+        .cp-accounts-mysub-header {
+            margin-bottom: 10px;
+            a {
+                margin-left: 20px;
+            }
         }
         .cp-accounts-mysub {
             display: flex;
             padding: 10px;
             gap: 10px;
-            margin-top: 50px;
+            margin-top: 20px;
             background: @cards-bg;
 
             border-radius: @border-radius;
@@ -191,13 +194,15 @@
             }
             .cp-accounts-storage-bar {
                 display: none;
-                height: 36px;
+                height: 5px;
+                box-sizing: content-box;
                 border: 1px solid @cryptpad_color_brand_300;
                 border-radius: @border-radius;
                 background: @cards-bg2;
                 padding: 4px;
                 .cp-usage-bar {
-                    width: 0;
+                    min-width: 5px;
+                    width: 5px;
                     border-radius: 6px;
                     height: 100%;
                     background: @cryptpad_color_brand_300;

@@ -19,7 +19,6 @@
     "gift_note": "Gift note (optional)",
     "gift_note_label": "Add a personal note for the beneficiary.",
     "cancel": "Cancel subscription",
-    "accounts_cat_mysubs": "My subscription",
     "admin_subsTab": "Subscriptions",
     "admin_statsTab": "Statistics",
     "admin_editTab": "Edit subscriptions",

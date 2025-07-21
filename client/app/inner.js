@@ -68,17 +68,6 @@ define([
     };
 
     const getHeader = () => {
-        const plans = h('a', {
-            href: '/accounts'
-        }, [
-            h('i.fa.fa-credit-card'),
-            h('span', Messages.goto_plans)
-        ]);
-        $(plans).click(e => {
-            e.preventDefault();
-            evOnRefresh.fire(false, 'plans');
-        });
-
         const subs = APP.myPlan ? h('a', {
             href: '/accounts'
         }, [
@@ -92,7 +81,7 @@ define([
             });
         }
 
-        const admin = APP.isAdmin ? h('a', {
+        const admin = APP.isAdmin ? h('button.btn', {
             href: '/accounts'
         }, [
             h('i.fa.fa-cogs'),
@@ -106,15 +95,30 @@ define([
         }
 
         return h('div.cp-accounts-mysub-header', [
-            APP.cat === "subs"
-                ? h('div.cp-accounts-title', Messages.accounts_cat_mysubs)
-                : undefined,
             h('div.cp-accounts-links', [
-                APP.cat !== 'plans' ? plans : undefined,
-                APP.cat !== 'subs' ? subs : undefined,
-                APP.cat !== 'admin' ? admin : undefined
+                APP.cat !== 'admin' ? admin : undefined,
+                APP.cat !== 'subs' ? subs : undefined
             ])
         ]);
+    };
+    const getPlansLink = () => {
+        const plans = h('a', {
+            href: '/accounts'
+        }, [
+            h('i.fa.fa-credit-card'),
+            h('span', Messages.goto_plans)
+        ]);
+        $(plans).click(e => {
+            e.preventDefault();
+            evOnRefresh.fire(false, 'plans');
+        });
+
+        return h('div.cp-accounts-mysub-allplans', [
+            h('div.cp-accounts-links', [
+                APP.cat !== 'plans' ? plans : undefined
+            ])
+        ]);
+
     };
 
     const getPlans = () => {
@@ -342,7 +346,7 @@ define([
         const driveKeys = Object.keys(driveData);
 
         // Personal plan: can't manage extra drives
-        if (planData?.drives === 1) { return; }
+        //if (planData?.drives === 1) { return; }
 
         const number = h('div.cp-accounts-drives-number', [
             Messages._getKey('drives', [
@@ -624,6 +628,7 @@ define([
         return h('div', [
             getHeader(),
             getSubData(),
+            getPlansLink(),
             getStorage(),
             getDpa(),
             getDrives()
