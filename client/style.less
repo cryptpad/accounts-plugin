@@ -24,13 +24,13 @@ body {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 20px;
+        gap: 0px;
         .cp-accounts-list-group {
             display: flex;
             flex-wrap: wrap;
             flex-shrink: 1;
             justify-content: center;
-            gap: 20px;
+            gap: 0px;
         }
         .cp-accounts-yearly-toggle {
             flex-basis: 100%;
@@ -96,11 +96,11 @@ body {
         }
     });
     .cp-accounts-card {
-        margin: 10px 0;
+        margin: 10px 10px;
         display: flex;
         flex-flow: column;
         align-items: center;
-        height: 380px;
+        min-height: 380px;
         width: 250px;
         font-size: 18px;
         border-radius: 10px;
@@ -140,10 +140,12 @@ body {
             flex: 1;
             width: 100%;
             justify-content: flex-end;
+            margin-top: 1.5rem;
             button {
                 font-weight: 700;
                 font-size: 18px;
-
+                margin-top: 0.5rem;
+                white-space: unset;
             }
         }
     }

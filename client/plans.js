@@ -73,22 +73,26 @@ define([
 
     const makeHeader = () => {
         return h('div.cp-accounts-header', [
-            h('div.cp-accounts-header-item', [
-                h('i.fa.fa-hdd-o'),
-                h('span', MyMessages.header_drive)
+            h('div.cp-accounts-header-group', [
+                h('div.cp-accounts-header-item', [
+                    h('i.fa.fa-hdd-o'),
+                    h('span', MyMessages.header_drive)
+                ]),
+                h('div.cp-accounts-header-item', [
+                    h('i.fa.fa-upload'),
+                    h('span', MyMessages.header_quota)
+                ])
             ]),
-            h('div.cp-accounts-header-item', [
-                h('i.fa.fa-upload'),
-                h('span', MyMessages.header_quota)
-            ]),
-            h('div.cp-accounts-header-item', [
-                h('i.fa.fa-life-ring'),
-                h('span', MyMessages.header_support)
-            ]),
-            h('div.cp-accounts-header-item', [
-                h('i.fa.fa-trophy'),
-                h('span', MyMessages.header_privacy)
-            ]),
+            h('div.cp-accounts-header-group', [
+                h('div.cp-accounts-header-item', [
+                    h('i.fa.fa-life-ring'),
+                    h('span', MyMessages.header_support)
+                ]),
+                h('div.cp-accounts-header-item', [
+                    h('i.fa.fa-trophy'),
+                    h('span', MyMessages.header_privacy)
+                ])
+            ])
         ]);
     };
 
@@ -128,12 +132,10 @@ define([
                 console.error(err || 'NO_CHECKOUT_URL');
                 return void UI.warn(Messages.error);
             }
-            console.error(err, url);
             gotoURL(url?.permalink);
         });
     };
     const makeCard = (plan, isRegister, myPlanData) => {
-        console.error(myPlanData);
         const data = PlansJSON[plan];
         if (!data) { return; }
 
@@ -231,6 +233,8 @@ define([
                 buttonTxt = MyMessages.tryCloud;
             } else if (!loggedIn) { // guests
                 buttonTxt = Messages.register_header;
+            } else if (isMyPlan && paid) { // your plan
+                buttonTxt = MyMessages.goto_mysub;
             } else if (isMyPlan) { // your plan
                 buttonTxt = MyMessages.yourPlan;
             } else if (!isPremiumUser) { // free user, paid plan
@@ -239,8 +243,7 @@ define([
             }
         }
 
-        const attr = (isMyPlan && loggedIn) ? { disabled: 'disabled' } : {};
-        const mainBtn = h('button.btn.btn-default.cp-colored', attr, [
+        const mainBtn = h('button.btn.btn-default.cp-colored', {}, [
             buttonTxt
         ]);
         const altBtn = (plan === "free" && !isRegister && loggedIn)
@@ -248,6 +251,10 @@ define([
                 : undefined;
 
         Util.onClickEnter($(mainBtn), () => {
+            if (isMyPlan) {
+                return $('#cp-accounts-goto-mysub').click();
+            }
+
             if (data.cloud) { // Contact
                 return gotoURL(data.url);
             }
@@ -255,7 +262,7 @@ define([
                 return onPlanUpdate(plan, isGiftedPlan);
             }
             if (!paid || !loggedIn) { // Free plan
-                return gotoURL(isRegister ? '/drive' : '/register');
+                return gotoURL(isRegister || loggedIn ? '/drive' : '/register');
             }
 
             const yearlyTxt = yearly ? '12' : '';

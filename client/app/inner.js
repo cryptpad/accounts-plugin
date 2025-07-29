@@ -68,7 +68,7 @@ define([
     };
 
     const getHeader = () => {
-        const subs = APP.myPlan ? h('a', {
+        const subs = APP.myPlan ? h('a#cp-accounts-goto-mysub', {
             href: '/accounts'
         }, [
             h('i.fa.fa-arrow-circle-left'),
@@ -79,6 +79,8 @@ define([
                 e.preventDefault();
                 evOnRefresh.fire();
             });
+            // Hidden link for plans: use card button
+            if (APP.cat === 'plans') { $(subs).hide(); }
         }
 
         const admin = APP.isAdmin ? h('button.btn', {
