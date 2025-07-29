@@ -68,7 +68,7 @@ define([
     };
 
     const getHeader = () => {
-        const subs = APP.myPlan ? h('a#cp-accounts-goto-mysub', {
+        const subs = APP.myPlan ? h('button.btn#cp-accounts-goto-mysub', {
             href: '/accounts'
         }, [
             h('i.fa.fa-arrow-circle-left'),
@@ -647,6 +647,10 @@ define([
     const andThen = (forceCat) => {
         const $container = $('#cp-app-accounts-container');
         forceCat ||= 'subs';
+
+        setTimeout(() => {
+            $container.scrollTop(0);
+        });
 
         if (APP.isAdmin && forceCat === "admin") {
             APP.cat = "admin";
