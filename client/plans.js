@@ -96,6 +96,27 @@ define([
         ]);
     };
 
+    const makeYourPlan = myPlan => {
+        console.error(myPlan);
+        const plan = myPlan?.plan;
+        if (!plan) { return; }
+        const name = Plans.getPlanName(plan);
+        const button = h('button.btn.cp-colored', [
+            h('i.fa.fa-ticket'),
+            h('span', MyMessages._getKey('yourPlanIs', [
+                name
+            ]))
+        ]);
+        Util.onClickEnter($(button), () => {
+            $('#cp-accounts-goto-mysub').click();
+        });
+        return h('div.cp-accounts-yourplan', {
+            'data-accounts-plan': plan
+        }, [
+            button
+        ]);
+    };
+
     const gotoURL = url => {
         if (sfCommon) {
             return sfCommon.gotoURL(url);
@@ -364,6 +385,7 @@ define([
     Plans.getPlansAccounts = (myPlan) => {
         return h('div', [
             makeHeader(),
+            makeYourPlan(myPlan),
             listPlans(false, false, myPlan),
             listPlans(true, false, myPlan),
         ]);

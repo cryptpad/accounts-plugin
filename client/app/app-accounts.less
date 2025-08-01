@@ -143,25 +143,6 @@
                     font-family: "IBM Plex Mono";
                     font-size: 24px;
                 }
-                .cp-accounts-usershared {
-                    label {
-                        //font-weight: bold;
-                        //color: @cp_alertify-fg;
-                        //margin-bottom: 0;
-                    }
-                    .cp-accounts-sharedby {
-                        display: flex;
-                        align-items: center;
-                        .avatar_main(32px);
-                        .cp-avatar:not(:empty) {
-                            margin-right: 10px;
-                        }
-                        span {
-                            font-family: "IBM Plex Mono";
-                            font-size: 18px;
-                        }
-                    }
-                }
                 & > *:not(:last-child) {
                     margin-bottom: 10px;
                 }
@@ -182,6 +163,20 @@
                 }
                 & > *:not(:last-child) {
                     margin-bottom: 10px;
+                }
+                .cp-accounts-usershared {
+                    .cp-accounts-sharedby {
+                        display: flex;
+                        align-items: center;
+                        .avatar_main(32px);
+                        .cp-avatar:not(:empty) {
+                            margin-right: 10px;
+                        }
+                        span {
+                            font-family: "IBM Plex Mono";
+                            font-size: 18px;
+                        }
+                    }
                 }
                 @media screen and (max-width:@content-width) {
                     width: 100%;

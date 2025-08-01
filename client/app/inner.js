@@ -171,13 +171,6 @@ define([
                             Messages.gifted_by;
             const user = h('div.cp-accounts-user', [
                 h('span.cp-accounts-username', userData.name),
-                h('div.cp-accounts-usershared', [
-                    h('label', byTxt),
-                    h('div.cp-accounts-sharedby', [
-                        ownerAvatar,
-                        h('span', ownerName || Messages.unknown)
-                    ])
-                ]),
             ]);
 
             const cancel = h('button.btn.btn-danger', [
@@ -198,7 +191,13 @@ define([
                 'data-accounts-plan': planId
             }, [
                 h('span.cp-accounts-planname.cp-colored', Plans.getPlanName(planId)),
-                h('span.cp-accounts-planprice', Messages.free),
+                h('div.cp-accounts-usershared', [
+                    h('label', byTxt),
+                    h('div.cp-accounts-sharedby', [
+                        ownerAvatar,
+                        h('span', ownerName || Messages.unknown)
+                    ])
+                ]),
                 h('span.cp-accounts-planswitch', cancel)
             ]);
 

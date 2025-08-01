@@ -125,7 +125,6 @@
     "add_key": "Add selected key",
     "remove_label": "Remove this drive from the shared storage",
     "team_drive": "Team drive",
-    "free": "Free",
     "shared_by": "Subscription shared by",
     "gifted_by": "Subscription offered by",
     "unknown": "Unknown user",
@@ -134,5 +133,6 @@
     "goto_admin": "Administration",
     "admin_giftTab": "Give subscription",
     "show_admin_only": "Show admin gifts only",
-    "confirmCancel": "Do you want want to cancel the free subscription that was shared with you?"
+    "confirmCancel": "Do you want want to cancel the free subscription that was shared with you?",
+    "yourPlanIs": "Your plan: {0}"
 }
