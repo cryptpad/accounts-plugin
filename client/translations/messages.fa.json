@@ -1,0 +1,101 @@
+{
+    "login_button": "ورود",
+    "login_password": "گذرواژه",
+    "status_active": "فعال",
+    "login_username": "نام‌کاربری",
+    "status": "وضعیت",
+    "logged_in_as_0": "✅ وارد شده به عنوان ",
+    "buttons_faq": "سوالات متداول",
+    "buttons_admin": "مدیریت",
+    "admin_statsTab": "آمار",
+    "error_defaultTitle": "❌ آخ، مشکلی پیش آمد",
+    "error_default": "یک خطای غیرمنتظره رخ داد، کد: ",
+    "error_notLoggedIn": "شما وارد نشده‌اید",
+    "error_pleaseLoginTitle": "لطفا وارد شوید",
+    "faq": {
+        "plans": {
+            "title": "طرح‌ها"
+        },
+        "payment": {
+            "platform": {
+                "q": "چگونه می‌توانم به سکوی پرداخت شما اعتماد کنم؟",
+                "a": "سکوی پرداخت ما براساس <a href=\"https://stripe.com\" target=\"_blank\">Stripe</a>، یکی از پیشگامان ابزارهای پردازش پرداخت در جهان است.<br>سرورهای ما هیچ دانشی از جزئیات پرداخت شما، از جمله شماره حساب یا کد پستی ندارند."
+            },
+            "data": {
+                "q": "چه اطلاعاتی روی سرور شما وقتی پرداخت می‌کنم ذخیره می‌کنید؟‌",
+                "a": "تمامی داده ای که در فرم پرداخت وارد می کنید به صورت مستقیم از یک راه ایمن به استرایپ (Stripe) ارسال می شود.ما فقط آدرس ایمیل شما را ذخیره می‌کنیم تا در صورت بروز مشکل برای حساب کاربری‌تان، بتوانیم به راحتی با شما تماس بگیریم"
+            },
+            "title": "پرداخت"
+        },
+        "cancel": {
+            "how": {
+                "q": "چه طور می توانم اشتراکم را لغو کنم ؟‌"
+            }
+        },
+        "account": {
+            "title": "مدیریت حساب",
+            "how": {
+                "q": "چه طور می توانم اشتراک ویژه خود را مدیریت کنم ؟‌"
+            }
+        }
+    },
+    "title": "حساب‌های کاربری کریپت‌پد",
+    "heading": "از آن استفاده کنید، عاشقش باشید ❤️ و ازش حمایت کنید",
+    "faq_title": "سوالات متداول",
+    "login_errorEmpty": "لطفا نام کاربری رو گذرواژه را تکمیل نمایید",
+    "login_errorUser": "نام کاربری یا گذرواژه اشتباه است",
+    "buttons_support": "پشتیبانی",
+    "buttons_donate": "حمایت",
+    "buttons_mysubs": "اشتراک‌های من",
+    "buttons_subscribe": "اشتراک",
+    "support": "پشتیبانی",
+    "admin_subsTab": "اشتراک‌ها",
+    "admin_donationsTab": "حمایت‌ها",
+    "admin_editTab": "ویرایش اشتراک‌ها",
+    "stats_thisMonth": "این ماه*",
+    "stats_previousMonth": "ماه قبل",
+    "stats_month": "ماه",
+    "stats_totalSubs": "اشتراک‌های فعال",
+    "id": "شناسه",
+    "ended": "تاریخ پایان",
+    "status_unpaid": "پرداخت نشده",
+    "error_detail": "پیغام خطا:",
+    "error_connecting": "اتصال به سرور حساب‌ها ناموفق بود. لطفاً بعداً مجدداً تلاش کنید.",
+    "status_refunded": "باز پرداخت",
+    "notes": "یادداشت‌ها",
+    "billing": "صورتحساب",
+    "stats_new": "اشتراک‌های فعال: ",
+    "pricePerMonth": "{0}€/ماهانه",
+    "pricePerYear": "{0}€/سالانه",
+    "support_pro_title": "پشتیبانی حرفه‌ای",
+    "contactBilling": "برای مسائل مربوط به اشتراک یا صورتحساب، با <a href=\"mailto:billing@cryptpad.fr\">billing@cryptpad.fr</a> تماس بگیرید.",
+    "subscribe_eurosMonth": "اشتراک {0}€ در ماه <sup>(بدون احتساب مالیات بر ارزش افزوده)</sup>",
+    "cancelNo": "برگشت به عقب",
+    "plan_basic_name": "شخصی",
+    "support_comm_title": "پشتیبانی اجتماع",
+    "monthlytitle": "اشتراک ماهانه",
+    "powertitle": "تیم",
+    "basictitle": "شخصی",
+    "yearlytitle": "اشتراک سالانه",
+    "plan_basic12_name": "شخصی (سالانه)",
+    "plan_power12_name": "تیم (‌سالانه)",
+    "plan_power_name": "تیم",
+    "processing_error": "مشکلی در پردازش اشتراک شما به وجود آمد.",
+    "contacts_teams": "تیم ها",
+    "billedMonthly": "ماهانه",
+    "billedYearly": "سالانه",
+    "accountsPage": "اشتراک",
+    "closeDetails": "بستن",
+    "openDetails": "جزئیات",
+    "subInfo_data": "اطلاعات بانکی شما به صورت مستقیم برای Stripe فرستاده می شود. کریپت‌پد نه آنها را می بیند و نه ذخیره می کند.",
+    "support_pro_details_noauth": "حق اشتراک شما شامل پشتیبانی حرفه‌ای نمی‌شود، برای ارتقاء با <a href=\"mailto:sales@cryptpad.fr\">sales@cryptpad.fr</a> تماس بگیرید.",
+    "stats_total": "مجموع*",
+    "stats_newSubs": "اشتراک‌های جدید",
+    "subscribe_thanks": "سپاس گذاریم برای حمایت شما از کریپت پد!",
+    "show_active_only": "تنها اشتراک‌های فعال را نمایش بده",
+    "error_fourOhFour": "به نظر می رسد چیزی اینجا وجود ندارد",
+    "subInfo_stripe": "پرداخت‌ها توسط استرایپ (Stripe)، یکی از پیشگامان معتبر در زمینه پردازش پرداخت‌ها، ایمن می‌شوند.",
+    "subInfo": "اطلاعات حق اشتراک",
+    "gift_title": "طرح‌های اضافی",
+    "contacts_contacts": "مخاطبین"
+}

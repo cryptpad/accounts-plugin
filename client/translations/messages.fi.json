@@ -1,0 +1,16 @@
+{
+    "support": "Tuki",
+    "logged_in_as_0": "✅ Kirjautuneena tilillä ",
+    "title": "CryptPad-tilit",
+    "buttons_subscribe": "Tilaa",
+    "buttons_mysubs": "Omat tilaukset",
+    "buttons_support": "Tuki",
+    "buttons_donate": "Lahjoita",
+    "buttons_faq": "UKK",
+    "buttons_admin": "Ylläpitäjä",
+    "admin_subsTab": "Tilaukset",
+    "admin_donationsTab": "Lahjoitukset",
+    "admin_statsTab": "Tilastot",
+    "admin_editTab": "Muokkaa tilauksia",
+    "error_defaultTitle": "❌ Hups, jokin meni vikaan"
+}
