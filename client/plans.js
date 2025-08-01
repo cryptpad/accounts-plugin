@@ -251,7 +251,7 @@ define([
                 : undefined;
 
         Util.onClickEnter($(mainBtn), () => {
-            if (isMyPlan) {
+            if (isMyPlan && !isRegister) {
                 return $('#cp-accounts-goto-mysub').click();
             }
 
