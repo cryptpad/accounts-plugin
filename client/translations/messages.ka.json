@@ -1,17 +1,7 @@
 {
-    "main_": "TODO",
-    "logged_in_as_1": " შესული სისტემაზე ",
-    "buttons_subscribe": "გამოწერა",
-    "buttons_support": "მხარდაჭერა",
     "buttons_donate": "შეწირულობა",
-    "buttons_admin": "ადმინისტრატორი",
     "admin_subsTab": "გამოწერები",
-    "admin_donationsTab": "შეწირულობები",
     "admin_editTab": "გამოწერების ჩასწორება",
-    "status": "სტატუსი",
-    "status_active": "აქტიური",
-    "status_canceled": "გაუქმებულია",
-    "status_unpaid": "გადაუხდელია",
     "id": "ID",
     "plan": "გეგმა",
     "benificiary": "ბენეფიციარი",
@@ -23,62 +13,18 @@
     "pricePerYear": "{0}€/წელიწადში",
     "stats_month": "თვე",
     "powertitle": "გუნდი",
-    "plan_pro_name": "დუო",
-    "plan_basic_name": "პირადი",
-    "plan_power_name": "გუნდი",
-    "viewBills": "ხედი",
     "processing": "დამუშავება",
-    "faq": {
-        "payment": {
-            "title": "გადახდა"
-        },
-        "plans": {
-            "title": "სატარიფო გეგმები"
-        },
-        "cancel": {
-            "title": "გაუქმება"
-        },
-        "domains": {
-            "title": "დომენები"
-        }
-    },
-    "donate10title": "შეწირულობა10",
-    "gift_button": "გადაცემა",
-    "contacts_teams": "გუნდები",
-    "restoreButton": "აღდგენა",
-    "pending": "რიგშია",
     "billedMonthly": "თვიურად",
     "billedYearly": "წლიურად",
-    "quota_shared": " გაზიარებულია",
     "closeDetails": "დახურვა",
-    "openDetails": "დეტალები",
-    "status_timeout": "ვადაამოწურულია",
-    "givenBy": "ვისგან",
     "price": "{0}€",
-    "upgradePlan": "სატარიფო გეგმის აწევა",
-    "accounts_cat_admin": "ადმინისტრირება",
-    "accounts_cat_org": "ორგანიზაციები",
     "dpa_en": "ინგლისური",
     "dpa_fr": "ფრანგული",
     "dpa_de": "გერმანული",
-    "admin_dpaTab": "DPA",
-    "support": "მცარდაჭერა",
-    "buttons_faq": "ხდკ",
     "admin_statsTab": "სტატისტიკა",
-    "admin_planTab": "სატარიფო გეგმები",
-    "login_username": "მომხმარებლის სახელი",
-    "login_password": "პაროლი",
-    "status_refunded": "თანხა დაბრუნებულია",
-    "billing": "ბილინგი",
     "stats_revenue": "შემოსავალი",
     "stats_total": "ჯამი*",
     "protitle": "დუო",
     "basictitle": "პირადი",
-    "donate5title": "შეწირულობა5",
-    "contacts_contacts": "კონტაქტები",
-    "accountsPage": "გამოწერა",
-    "plan_shared_name": "გაზიარებულია",
-    "downgradePlan": "სატარიფო გეგმის ჩამოწევა",
-    "accounts_cat_subscribe": "სატარიფო გეგმები",
-    "buttons_mysubs": "ჩემი გამოწერები"
+    "accountsPage": "გამოწერა"
 }
