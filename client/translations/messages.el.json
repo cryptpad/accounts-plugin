@@ -1,9 +1,3 @@
 {
-    "logged_in_as_0": "Σε σύνδεση ως ",
-    "buttons_subscribe": "Εγγραφή",
-    "buttons_mysubs": "Οι συνδρομές μου",
-    "buttons_support": "Υποστήριξη",
-    "buttons_donate": "Δωρεά",
-    "buttons_faq": "Συχνές Ερωτήσεις",
-    "support": "Υποστήριξη"
+    "buttons_donate": "Δωρεά"
 }
