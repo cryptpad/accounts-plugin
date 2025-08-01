@@ -353,5 +353,6 @@
     "bigger_plans": "Pour des plans plus grands, voir ",
     "plandetails_basic": "<li><strong>{0}GB</strong> de stockage</li>\n<li><strong>{1}</strong> drive</li>\n<li>{2} (FR, EN)</li>",
     "stripe_change": "Changer de forfait",
-    "stripe_manage": "gérer le compte"
+    "stripe_manage": "gérer le compte",
+    "link_name": "Abonnement"
 }
