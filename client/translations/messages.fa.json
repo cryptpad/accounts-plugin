@@ -22,5 +22,7 @@
     "closeDetails": "بستن",
     "stats_total": "مجموع*",
     "stats_newSubs": "اشتراک‌های جدید",
-    "show_active_only": "تنها اشتراک‌های فعال را نمایش بده"
+    "show_active_only": "تنها اشتراک‌های فعال را نمایش بده",
+    "price": "{0}€",
+    "yourPlan": "طرح شما"
 }
