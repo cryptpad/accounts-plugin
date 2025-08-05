@@ -178,7 +178,7 @@ define([
                 Messages.cancel
             ]);
             Util.onClickEnter($(cancel), () => {
-                UI.confirm(MyMessages.confirmCancel, yes => {
+                UI.confirm(Messages.confirmCancel, yes => {
                     if (!yes) { return; }
                     Api.cancelGift(APP.myPlan?.id, err => {
                         if (err) {
