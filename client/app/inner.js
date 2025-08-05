@@ -178,12 +178,15 @@ define([
                 Messages.cancel
             ]);
             Util.onClickEnter($(cancel), () => {
-                Api.cancelGift(APP.myPlan?.id, err => {
-                    if (err) {
-                        console.error(err);
-                        return void UI.warn(Messages.error);
-                    }
-                    evOnRefresh.fire();
+                UI.confirm(MyMessages.confirmCancel, yes => {
+                    if (!yes) { return; }
+                    Api.cancelGift(APP.myPlan?.id, err => {
+                        if (err) {
+                            console.error(err);
+                            return void UI.warn(Messages.error);
+                        }
+                        evOnRefresh.fire();
+                    });
                 });
             });
 
