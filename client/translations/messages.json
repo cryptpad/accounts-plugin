@@ -74,15 +74,10 @@
     "show_active_only": "Show active subscriptions only",
     "show_inactive_only": "Show cancelled subscriptions only",
     "show_gifts": "Show free subscriptions (admin gift or extra subscription)",
-
-
-
     "pricePerMonth": "{0}€/month",
     "pricePerYear": "{0}€/year",
     "stats_estimation": "Estimated revenue for a year: ",
     "orgtitle": "Org {0} Users",
-
-
     "freetitle": "Free",
     "cloudtitle": "CryptPad Cloud",
     "org_title": "Organization plans",
@@ -132,6 +127,6 @@
     "goto_admin": "Administration",
     "admin_giftTab": "Give subscription",
     "show_admin_only": "Show admin gifts only",
-    "confirmCancel": "Do you want want to cancel the free subscription that was shared with you?",
+    "confirmCancel": "Do you want to cancel the free subscription that was shared with you?",
     "yourPlanIs": "Your plan: {0}"
 }
