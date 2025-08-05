@@ -95,5 +95,11 @@
     "header_support": "英语和法语优先支持",
     "plan_drive": "<strong>1</strong> 个云盘",
     "perMonthVAT": "每月（不含增值税）",
-    "cloud_feature1": "全托管式服务或按需灵活支持方案‌"
+    "cloud_feature1": "全托管式服务或按需灵活支持方案‌",
+    "cloud_feature2": "季度更新",
+    "cloud_feature3": "自定义功能",
+    "cloud_feature4": "管理员支持",
+    "price_monthly": "每月 {0} 欧元",
+    "price_yearly": "每年 {0} 欧元",
+    "renews": "续订：{0}"
 }
