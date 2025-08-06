@@ -138,6 +138,20 @@ define([
             });
             return;
         }
+        if (isGiftedPlan) {
+            // Free users want to switch plan
+            UI.confirm(MyMessages.confirmCancel, yes => {
+                if (!yes) { return; }
+                Api.cancelGift(isGiftedPlan, err => {
+                    if (err) {
+                        console.error(err);
+                        return void UI.warn(Messages.error);
+                    }
+                    onPlanPicked(plan, false);
+                });
+            });
+            return;
+        }
         // Update a paid plan: show "cancel" page if switching to free
         Api.stripePortal(plan !== "free", (err, val) => {
             if (err) {
@@ -348,16 +362,10 @@ define([
         return PlansJSON[plan];
     };
 
-    const prettyName = str => {
-        return String(str).charAt(0).toUpperCase() +
-               String(str).slice(1).toLowerCase();
-    };
     Plans.getPlanName = plan => {
         const data = Plans.getPlanData(plan);
-        let nameKey = (data.org && !data.cloud)
-            ? MyMessages._getKey('orgtitle', [data.drives])
-            : MyMessages[`${plan}title`] || plan;
-        return data.cloud ? nameKey : prettyName(nameKey);
+        let nameKey = data.name || MyMessages.freetitle;
+        return nameKey;
     };
     Plans.getPlanPrice = (plan, _yearly) => {
         const data = Plans.getPlanData(plan);
