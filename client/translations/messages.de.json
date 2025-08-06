@@ -77,5 +77,14 @@
     "dpa_signed": "Ein Auftrags­verarbeitungs­vertrag wurde für dieses Abonnement unterschrieben. Du kannst ihn durch Anklicken der Schaltfläche unten herunterladen. Bitte kontaktiere uns über die <a href=\"{0}\">Support-Seite</a>, sofern du Informationen zu deiner Organisation aktualisieren möchtest.",
     "dpa_title": "Auftrags­verarbeitungs­vertrag (AVV)",
     "dpa_link": "Tarife für Organisationen beinhalten einen <b>Auftrags­verarbeitungs­vertrag</b>. Du kannst dir <a href=\"{0}\" target=\"_blank\">ein Muster des Dokuments ansehen</a> und nach Abschluss des Abonnements eine personalisierte Version erstellen.",
-    "stripe_manage": "Account verwalten"
+    "stripe_manage": "Account verwalten",
+    "link_name": "Abonnement",
+    "cloudtitle": "CryptPad Cloud",
+    "goto_admin": "Administration",
+    "yourPlanIs": "Dein Abonnement: {0}",
+    "confirmCancel": "Möchtest du das mit dir geteilte kostenlose Abonnement kündigen?",
+    "drives": "Drives: {0}",
+    "drivesNumber": "{0} von {1}",
+    "team_drive": "Team-Drive",
+    "freetitle": "Kostenlos"
 }
