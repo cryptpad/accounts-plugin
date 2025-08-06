@@ -76,7 +76,7 @@
     "dpa_signed": "Un DPA a été signé pour cet abonnement. Vous pouvez le télécharger en cliquant sur le bouton ci-dessous. Veuillez nous contacter via la <a href=\"{0}\">page support</a> si vous souhaitez mettre à jour les informations concernant votre organisation.",
     "dpa_title": "Accord de traitement des données (DPA)",
     "dpa_link": "Les abonnements organisation incluent un <b>Accord de traitement des données</b>. <a href=\"{0}\" target=\"_blank\">Visualisez un aperçu de ce document</a> et générez une version personnalisée une fois votre abonnement activé.",
-    "orgtitle": "{0} Utilisateur·ices",
+    "orgtitle": "Org {0} Utilisateur·ices",
     "stripe_manage": "Gérer votre compte",
     "link_name": "Abonnement",
     "cloudtitle": "CryptPad Cloud",
