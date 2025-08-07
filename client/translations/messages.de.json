@@ -106,5 +106,7 @@
     "price_monthly": "{0} € monatlich",
     "header_drive": "Flexible Datenspeicherung mit Benutzer- und Team-Drives",
     "processing_success": "Dein Abonnement wurde erfolgreich aktiviert. Vielen Dank für deine Unterstützung!",
-    "perMonthVAT": "pro Monat (zzgl. MwSt.)"
+    "perMonthVAT": "pro Monat (zzgl. MwSt.)",
+    "gifted_by": "Abonnement geschenkt von Administrator",
+    "shared_by": "Abonnement geteilt von"
 }
