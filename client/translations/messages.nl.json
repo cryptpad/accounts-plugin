@@ -127,5 +127,6 @@
     "free_support": "Enige ondersteuning ({0})",
     "canceled": "Abonnement opgezegd.<br>Voordelen geldig tot <strong>{0}</strong>.",
     "quota_error": "Uw abonnement komt niet overeen met uw opslaglimiet op deze CryptPad-instantie. Als uw opslaglimiet niet binnen een uur automatisch wordt bijgewerkt, neem dan contact op met de ondersteuning.",
-    "add_from_key": "Voeg een openbare sleutel van een gebruiker of team toe om hun schijf aan uw abonnement toe te voegen en opslagruimte te delen."
+    "add_from_key": "Voeg een openbare sleutel van een gebruiker of team toe om hun schijf aan uw abonnement toe te voegen en opslagruimte te delen.",
+    "dpa_signed": "Er is een DPA ondertekend voor dit abonnement. U kunt deze downloaden door op de onderstaande knop te klikken. Neem contact met ons op via de <a href=\"{0}\">Support-pagina</a> als u uw organisatiegegevens wilt bijwerken."
 }
