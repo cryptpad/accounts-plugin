@@ -77,5 +77,9 @@
     "dpa_generated": "Dla tej subskrypcji dostępna jest umowa o ochronie danych. Możesz ją <b>pobrać</b>, klikając poniższy przycisk. Umowa będzie aktywna dopiero po <b>podpisaniu</b> i <b>odesłaniu</b> do nas. Możesz skontaktować się z nami za pomocą <a href=\"{0}\">strony pomocy</a>, jeśli chcesz zaktualizować informacje o swojej organizacji.",
     "dpa_downloadError": "Wystąpił błąd podczas pobierania umowy o ochronie danych. Spróbuj ponownie i jeśli problem będzie się powtarzał, skontaktuj się z pomocą techniczną.",
     "dpa_info": "Dzięki planowi CryptPad dla organizacji możesz wygenerować umowę o ochronie danych. Ta umowa będzie aktywna po podpisaniu przez Twoją organizację i odesłaniu do nas.",
-    "dpa_identification": "Dane identyfikacyjne (rodzaj i numer rejestracji)"
+    "dpa_identification": "Dane identyfikacyjne (rodzaj i numer rejestracji)",
+    "link_name": "Subskrypcja",
+    "freetitle": "Darmowe",
+    "cloudtitle": "Chmura CryptPad",
+    "plan_quota": "<strong>{0}GB</strong> miejsca na dysku"
 }
