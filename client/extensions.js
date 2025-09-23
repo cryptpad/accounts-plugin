@@ -6,8 +6,10 @@ define([
     '/common/common-interface.js',
     '/common/outer/local-store.js',
     '/common/hyperscript.js',
-    '/customize/messages.js'
-], function (ApiConfig, $, Plans, Util, UI, LocalStore, h, Messages) {
+    '/common/common-icons.js',
+    '/customize/messages.js',
+    '/customize/fonts/lucide.js',
+], function (ApiConfig, $, Plans, Util, UI, LocalStore, h, Icons, Messages, Lucide) {
     return function (MyMessages) {
         const extensions = {};
 
@@ -27,7 +29,7 @@ define([
 
         extensions.SETTINGS_CATEGORY = [{
             id: 'subscription',
-            icon: 'fa fa-star-o',
+            icon: Icons.get('pricing'),
             name: MyMessages.link_name,
             getContent: (common) => {
                 return {
@@ -131,10 +133,7 @@ define([
                 const priv = common.getMetadataMgr().getPrivateData();
                 return {
                     tag: 'a',
-                    attributes: {
-                        'class': 'fa fa-star-o'
-                    },
-                    content: h('span', priv.plan ? MyMessages.link_name : Messages.pricing),
+                    content: [Icons.get('pricing'), h('span', priv.plan ? MyMessages.link_name : Messages.pricing)],
                     action: function () {
                         common.openURL(priv.plan ? '/accounts'
                                             :'/features.html');
@@ -192,7 +191,7 @@ define([
                 ]);
             }
         }];
-
+        Lucide.createIcons();
         return extensions;
     };
 });
