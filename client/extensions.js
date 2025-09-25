@@ -29,7 +29,7 @@ define([
 
         extensions.SETTINGS_CATEGORY = [{
             id: 'subscription',
-            icon: Icons.get('pricing'),
+            icon: 'pricing',
             name: MyMessages.link_name,
             getContent: (common) => {
                 return {
@@ -69,7 +69,7 @@ define([
                     var sub = h('div.cp-sub-prompt', [
                         h('span', Messages.home_morestorage),
                         h('a.subscribe-btn', {href:"/accounts/"},  [
-                            h('i.fa.fa-ticket'),
+                            Icons.get('subscribe'),
                             Messages.features_f_subscribe
                         ])
                     ]);
