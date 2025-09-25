@@ -157,7 +157,7 @@ const init = (APP, Plans, Api, Messages) => {
                     });
                     data.id = sub.id;
                     console.log(data);
-                    $editForm.html('<span class="cp-spinner fa fa-spinner fa-pulse fa-3x fa-fw"></span>');
+                    $editForm.html('<span class="cp-spinner fa fa-spinner fa-pulse fa-3x fa-fw"></span>'); // TO BE UPDATED
                     Api.updateSubAdmin(data, function (err) {
                         if (err) {
                             var error = h('div.cp-admin-edit-error', err);

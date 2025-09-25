@@ -10,7 +10,9 @@ define([
     '/common/common-signing-keys.js',
     '/common/common-util.js',
     '/common/common-hash.js',
+    '/common/common-icons.js',
     '/customize/messages.js',
+    '/customize/fonts/lucide.js',
     '/common/extensions.js',
     '/accounts/app/admin.js',
     '/accounts/app/dpa.js',
@@ -32,7 +34,9 @@ define([
     Keys,
     Util,
     Hash,
+    Icons,
     MessagesCP,
+    Lucide,
     Extensions,
     Admin,
     Dpa,
@@ -71,7 +75,7 @@ define([
         const subs = APP.myPlan ? h('button.btn#cp-accounts-goto-mysub', {
             href: '/accounts'
         }, [
-            h('i.fa.fa-arrow-circle-left'),
+            Icons.get('circle-left'),
             h('span', Messages.goto_mysub)
         ]) : undefined;
         if (APP.myPlan) {
@@ -86,7 +90,7 @@ define([
         const admin = APP.isAdmin ? h('button.btn', {
             href: '/accounts'
         }, [
-            h('i.fa.fa-cogs'),
+            Icons.get('administration'),
             h('span', Messages.goto_admin)
         ]) : undefined;
         if (APP.isAdmin) {
@@ -107,7 +111,7 @@ define([
         const plans = h('a', {
             href: '/accounts'
         }, [
-            h('i.fa.fa-credit-card'),
+            Icons.get('credit-card'),
             h('span', Messages.goto_plans)
         ]);
         $(plans).click(e => {
@@ -174,7 +178,7 @@ define([
             ]);
 
             const cancel = h('button.btn.btn-danger', [
-                h('i.fa.fa-times'),
+                Icons.get('close'),
                 Messages.cancel
             ]);
             Util.onClickEnter($(cancel), () => {
@@ -213,7 +217,7 @@ define([
 
 
         const manageButton = h('button.btn.btn-case.btn-primary-alt', [
-            h('i.fa.fa-id-card-o'),
+            Icons.get('user-directory'),
             h('span', Messages.stripe_manage)
         ]);
         const user = h('div.cp-accounts-user', [
@@ -228,7 +232,7 @@ define([
 
         const switchCls = canceled ? 'btn-primary' : 'btn-default';
         const switchButton = h(`button.btn.btn-case.${switchCls}`, [
-            h('i.fa.fa-ticket'),
+            Icons.get('subscribe'),
             h('span', canceled ? Messages.stripe_renew
                                : Messages.stripe_switch)
         ]);
@@ -395,17 +399,17 @@ define([
 
                 const isMe = key === privData.edPublic;
 
-                const teamIcon = h('i.fa.fa-users', {
+                const teamIcon = Icons.get('users', {
                     title: Messages.team_drive,
                     'aria-label': Messages.team_drive
                 });
-                const profile = h('i.fa.fa-user', {
+                const profile = Icons.get('user', {
                     role: 'button',
                     tabindex: 0,
                     title: MessagesCP.profileButton,
                     'aria-label': MessagesCP.profileButton
                 });
-                const remove = h('i.fa.fa-times', {
+                const remove = Icons.get('close', {
                     role: 'button',
                     tabindex: 0,
                     title: Messages.remove_label,
@@ -420,7 +424,7 @@ define([
 
                 const userClass = isMe ? '.cp-me' : '.cp-user';
                 return h('div.cp-accounts-drive'+userClass, [
-                    h('i.fa.fa-hdd-o'),
+                    Icons.get('drive'),
                     avatar,
                     h('span.cp-drive-data', name),
                     actions
@@ -429,8 +433,8 @@ define([
             const data = addAdded ? h('span.cp-drive-data') :
                 UI.setHTML(h('span.cp-drive-data'),
                     Messages._getKey('drive_add', [
-                        h('i.fa.fa-user').outerHTML,
-                        h('i.fa.fa-users').outerHTML
+                        Icons.get('user').outerHTML,
+                        Icons.get('users').outerHTML
                     ]));
             addAdded = true;
             return h('div.cp-accounts-drive.cp-add', {
@@ -438,8 +442,8 @@ define([
                 'role': 'button',
                 tabindex: 0
             }, [
-                h('i.fa.fa-hdd-o'),
-                h('i.fa.fa-plus'),
+                Icons.get('drive'),
+                Icons.get('add'),
                 data
             ]);
         };
@@ -513,7 +517,7 @@ define([
                     onClick: () => {}
                 }, {
                     name: Messages.add_key,
-                    iconClass: '.fa.fa-plus',
+                    iconClass: 'add',
                     className: 'btn-primary',
                     onClick: () => {
                         const val = $(key).val();
@@ -560,7 +564,7 @@ define([
                     onClick: () => {}
                 }, {
                     name: Messages.add_key,
-                    iconClass: '.fa.fa-plus',
+                    iconClass: 'add',
                     className: 'btn-primary',
                     onClick: () => {
                         const val = $(keyInput).val();
@@ -583,12 +587,12 @@ define([
             const tabs = [{
                 content: contactsModal,
                 title: Messages.from_contacts,
-                icon: 'fa fa-users',
+                icon: 'users',
                 active: true
             }, {
                 content: keyModal,
                 title: Messages.from_key,
-                icon: 'fa fa-key',
+                icon: 'key',
                 active: false
             }];
 
@@ -696,7 +700,7 @@ define([
             h('div.cp-spinner-div center',
                 h('p.alert.alert-primary', Messages.processing_wait),
                 h('div.cp-spinner-container', [
-                    h('i.fa.fa-spinner.fa-pulse.fa-3x.fa-fw.loading'),
+                    h('i.fa.fa-spinner.fa-pulse.fa-3x.fa-fw.loading'), // TO BE UPDATED
                     h('span.loading-message', Messages.processing)
                 ])
             )
@@ -770,7 +774,7 @@ define([
             andThen();
             return void UI.removeLoadingScreen();
         }
-
+        setTimeout(() => Lucide.createIcons());
         nThen(waitFor => {
             sframeChan.query('ACCOUNTS_GET_KEYS', null, waitFor((err, keys) => {
                 if (err) {

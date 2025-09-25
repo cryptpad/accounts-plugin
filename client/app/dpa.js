@@ -3,9 +3,11 @@ define([
     '/common/hyperscript.js',
     '/common/common-util.js',
     '/common/common-interface.js',
+    '/common/common-icons.js',
     '/customize/messages.js',
+    '/customize/fonts/lucide.js',
     '/common/extensions.js'
-], ($, h, Util, UI, MessagesCP, Extensions) => {
+], ($, h, Util, UI, Icons, MessagesCP, Lucide, Extensions) => {
 
     let Messages = {};
     // Get translations from plugin
@@ -106,7 +108,7 @@ define([
             const data = obj.data;
 
             const showBtn = h('button.btn.btn-default.cp-show-dpa', [
-                h('i.fa.fa-file-text-o'), Messages.dpa_title
+                Icons.get('notebook'), Messages.dpa_title
             ]);
             $(showBtn).click(() => {
                 dpaState = true;
@@ -114,7 +116,7 @@ define([
                 $(showBtn).hide();
             });
             const hideBtn = h('button.btn.btn-default', [
-                h('i.fa.fa-times'), Messages.closeDetails]);
+                Icons.get('close'), Messages.closeDetails]);
             $(hideBtn).click(() => {
                 dpaState = true;
                 $div.find('.dpa-block').hide();
@@ -126,7 +128,7 @@ define([
 
             const showDownloadBanner = signed => {
                 const uploadButton = h('button.btn.btn-primary', [
-                    h('i.fa.fa-upload'),
+                    Icons.get('upload'),
                     Messages.dpa_sendSigned
                 ]);
                 $(uploadButton).click(() => {
@@ -150,7 +152,7 @@ define([
                 const buttonKey = signed ? 'dpa_download'
                                          : 'dpa_downloadUnsigned';
                 const button = h('button.btn.btn-secondary', [
-                    h('i.fa.fa-download'),
+                    Icons.get('download'),
                     Messages[buttonKey]
                 ]);
                 $(button).click(() => {
@@ -204,7 +206,7 @@ define([
                     redraw();
                 });
             });
-
+            Lucide.createIcons();
             $div.append([
                 showBtn,
                 dpaForm
@@ -240,7 +242,7 @@ define([
                 const tr = h('tr');
 
                 let deleteSigned = h('button.btn.btn-danger', [
-                    h('i.fa.fa-trash'),
+                    Icons.get('trash-empty'),
                     h('span', Messages.dpa_deleteSigned)
                 ]);
                 UI.confirmButton(deleteSigned, {
@@ -257,7 +259,7 @@ define([
                 if (!data.signed_on) { deleteSigned = undefined; }
 
                 const btn = h('button.btn.btn-danger', [
-                    h('i.fa.fa-times'),
+                    Icons.get('close'),
                     h('span', Messages.dpa_delete)
                 ]);
                 UI.confirmButton(btn, {
@@ -298,10 +300,10 @@ define([
 
 
             const showBtn = h('button.btn.btn-default.cp-show-dpa', [
-                h('i.fa.fa-file-text-o'), Messages.dpa_title
+                Icons.get('notebook'), Messages.dpa_title
             ]);
             const hideBtn = h('button.btn.btn-default', [
-                h('i.fa.fa-times'), Messages.closeDetails]);
+                Icons.get('close'), Messages.closeDetails]);
             const dpaForm = getDpaForm(Api, hideBtn, false, data => {
                 Api.createDpaAdmin(data, function (err, obj) {
                     if (err || obj?.allowed === false) {
@@ -321,7 +323,7 @@ define([
                 $(dpaBlock).hide();
                 $(showBtn).show();
             });
-
+            setTimeout(() => Lucide.createIcons());
             $div.append([
                 showBtn,
                 dpaBlock

@@ -60,7 +60,7 @@
                 width: 200px;
                 align-items: center;
                 margin: 10px;
-                & > i {
+                & > svg {
                     font-size: 72px;
                 }
                 & > span {
@@ -105,7 +105,7 @@
                 flex-flow: column;
             }
             a {
-                i {
+                svg {
                     margin-right: 10px;
                 }
                 color: @cryptpad_color_link;
@@ -287,7 +287,7 @@
                         user-select: none;
                         flex-wrap: wrap;
                         @media screen and (max-width:@content-width) {
-                            i {
+                            svg {
                                 display: none;
                             }
                         }
@@ -295,17 +295,17 @@
                     .cp-actions {
                         display: flex;
                         gap: 10px;
-                        i[role="button"] {
+                        svg[role="button"] {
                             &:hover, &:active, &:focus {
                                 color: @color2;
                             }
                         }
                     }
-                    i {
+                    svg {
                         font-size: 36px;
                         color: @color1;
                     }
-                    & > i, .cp-actions i {
+                    & > svg, .cp-actions svg {
                         width: 40px;
                         text-align: center;
                     }
@@ -501,4 +501,3 @@
 
     }
 }
-

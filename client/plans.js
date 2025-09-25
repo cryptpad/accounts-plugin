@@ -4,12 +4,14 @@ define([
     '/common/hyperscript.js',
     '/common/common-interface.js',
     '/common/common-util.js',
+    '/common/common-icons.js',
     '/customize/application_config.js',
     '/customize/messages.js',
+    '/customize/fonts/lucide.js',
     '/accounts/api.js',
     'json!/accounts/plans.json'
-], ($, ApiConfig, h, UI, Util,
-    AppConfig, Messages, Api, PlansJSON) => {
+], ($, ApiConfig, h, UI, Util, Icons,
+    AppConfig, Messages, Lucide, Api, PlansJSON) => {
     const Plans = {};
     let MyMessages = {};
     let sfCommon;
@@ -72,24 +74,25 @@ define([
     };
 
     const makeHeader = () => {
+        setTimeout(()=> Lucide.createIcons());
         return h('div.cp-accounts-header', [
             h('div.cp-accounts-header-group', [
                 h('div.cp-accounts-header-item', [
-                    h('i.fa.fa-hdd-o'),
+                    Icons.get('drive'),
                     h('span', MyMessages.header_drive)
                 ]),
                 h('div.cp-accounts-header-item', [
-                    h('i.fa.fa-upload'),
+                    Icons.get('upload'),
                     h('span', MyMessages.header_quota)
                 ])
             ]),
             h('div.cp-accounts-header-group', [
                 h('div.cp-accounts-header-item', [
-                    h('i.fa.fa-life-ring'),
+                    Icons.get('support'),
                     h('span', MyMessages.header_support)
                 ]),
                 h('div.cp-accounts-header-item', [
-                    h('i.fa.fa-trophy'),
+                    Icons.get('trophy'),
                     h('span', MyMessages.header_privacy)
                 ])
             ])
@@ -102,7 +105,7 @@ define([
         if (!plan) { return; }
         const name = Plans.getPlanName(plan);
         const button = h('button.btn.cp-colored', [
-            h('i.fa.fa-ticket'),
+            Icons.get('subscribe'),
             h('span', MyMessages._getKey('yourPlanIs', [
                 name
             ]))
@@ -110,6 +113,7 @@ define([
         Util.onClickEnter($(button), () => {
             $('#cp-accounts-goto-mysub').click();
         });
+        Lucide.createIcons();
         return h('div.cp-accounts-yourplan', {
             'data-accounts-plan': plan
         }, [
