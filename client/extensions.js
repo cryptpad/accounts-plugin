@@ -29,12 +29,12 @@ define([
 
         extensions.SETTINGS_CATEGORY = [{
             id: 'subscription',
-            icon: 'pricing',
             name: MyMessages.link_name,
+            icon: 'pricing',
             getContent: (common) => {
                 return {
                     onClick: () => {
-                        common.gotoURL('/accounts');
+                       common.gotoURL('/accounts');
                     }
                 };
             }
@@ -69,7 +69,7 @@ define([
                     var sub = h('div.cp-sub-prompt', [
                         h('span', Messages.home_morestorage),
                         h('a.subscribe-btn', {href:"/accounts/"},  [
-                            Icons.get('subscribe'),
+                            Icons.get('subscribe', {style: 'margin-bottom:.25rem;'}),
                             Messages.features_f_subscribe
                         ])
                     ]);
