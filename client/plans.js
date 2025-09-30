@@ -123,6 +123,15 @@ define([
         }
         window.location.href = url;
     };
+    const onPlanPicked = (plan, isRegister) => {
+        Api.subscribe(plan, Boolean(isRegister), (err, url) => {
+            if (err || !url) {
+                console.error(err || 'NO_CHECKOUT_URL');
+                return void UI.warn(Messages.error);
+            }
+            gotoURL(url?.permalink);
+        });
+    };
     const onPlanUpdate = (plan, isGiftedPlan) => {
         if (plan === "free" && isGiftedPlan) {
             // The user wants to cancel their gifted plan
@@ -159,15 +168,6 @@ define([
                 return void UI.alert(Messages.error);
             }
             gotoURL(val);
-        });
-    };
-    const onPlanPicked = (plan, isRegister) => {
-        Api.subscribe(plan, Boolean(isRegister), (err, url) => {
-            if (err || !url) {
-                console.error(err || 'NO_CHECKOUT_URL');
-                return void UI.warn(Messages.error);
-            }
-            gotoURL(url?.permalink);
         });
     };
     const makeCard = (plan, isRegister, myPlanData) => {
