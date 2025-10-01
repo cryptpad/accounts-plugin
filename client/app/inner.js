@@ -699,13 +699,14 @@ define([
             h('div.cp-spinner-div center',
                 h('p.alert.alert-primary', Messages.processing_wait),
                 h('div.cp-spinner-container', [
-                    h('i.fa.fa-spinner.fa-pulse.fa-3x.fa-fw.loading'), // TO BE UPDATED
+                    Icons.get('loading'),
                     h('span.loading-message', Messages.processing)
                 ])
             )
         ]);
         const $content = $(content);
         $container.append(content);
+        Lucide.createIcons();
 
         Api.checkSession((err, val) => {
             if (err || !val) {

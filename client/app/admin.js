@@ -161,7 +161,8 @@ const init = (APP, Plans, Api, Messages) => {
                     });
                     data.id = sub.id;
                     console.log(data);
-                    $editForm.html('<span class="cp-spinner fa fa-spinner fa-pulse fa-3x fa-fw"></span>'); // TO BE UPDATED
+                    $editForm.html('<i class="cp-spinner" data-lucide="loader"></i>');
+                    Lucide.createIcons();
                     Api.updateSubAdmin(data, function (err) {
                         if (err) {
                             var error = h('div.cp-admin-edit-error', err);
@@ -173,7 +174,8 @@ const init = (APP, Plans, Api, Messages) => {
             });
 
             $(queryButton).click(function () {
-                $editForm.html('<span class="cp-spinner fa fa-spinner fa-pulse fa-3x fa-fw"></span>');
+                $editForm.html('<i class="cp-spinner" data-lucide="loader"></i>');
+                Lucide.createIcons();
                 Api.stripeSync(sub.id, function (err) {
                     if (err) {
                         var error = h('div.cp-admin-edit-error', err);
@@ -324,7 +326,7 @@ const init = (APP, Plans, Api, Messages) => {
                 const c = Plans.getPlanPrice(sub.plan);
                 cost = Messages._getKey('pricePer'+(Plans.isYearly(sub.plan) ? 'Year' : 'Month'), [c]);
             }
-            const key = h('button.btn.fa.fa-key.cp-copy-key');
+            const key = h('button.btn.cp-copy-key', Icons.get('key'));
             $(key).click(function () {
                 Clipboard.copy(sub.benificiary_pubkey, () => {
                     UI.log('Copied to clipboard');
@@ -344,6 +346,7 @@ const init = (APP, Plans, Api, Messages) => {
                 ['status', Messages['status_' + sub.status] || sub.status],
             ]).forEach(table.addCell(tr));
             table.$table.append(tr);
+            Lucide.createIcons();
         };
 
 
