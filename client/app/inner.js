@@ -20,7 +20,6 @@ define([
     '/accounts/api.js',
 
     'css!/components/bootstrap/dist/css/bootstrap.min.css',
-    'css!/components/components-font-awesome/css/font-awesome.min.css',
     'less!/accounts/app/app-accounts.less',
 ], function (
     $,
