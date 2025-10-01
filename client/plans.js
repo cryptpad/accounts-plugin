@@ -7,7 +7,7 @@ define([
     '/common/common-icons.js',
     '/customize/application_config.js',
     '/customize/messages.js',
-    '/customize/fonts/lucide.js',
+    '/customize/lucide.js',
     '/accounts/api.js',
     'json!/accounts/plans.json'
 ], ($, ApiConfig, h, UI, Util, Icons,

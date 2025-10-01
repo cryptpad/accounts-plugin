@@ -8,7 +8,7 @@ define([
     '/common/hyperscript.js',
     '/common/common-icons.js',
     '/customize/messages.js',
-    '/customize/fonts/lucide.js',
+    '/customize/lucide.js',
 ], function (ApiConfig, $, Plans, Util, UI, LocalStore, h, Icons, Messages, Lucide) {
     return function (MyMessages) {
         const extensions = {};

@@ -5,7 +5,7 @@ define([
     '/common/common-interface.js',
     '/common/common-icons.js',
     '/customize/messages.js',
-    '/customize/fonts/lucide.js',
+    '/customize/lucide.js',
     '/common/extensions.js'
 ], ($, h, Util, UI, Icons, MessagesCP, Lucide, Extensions) => {
 
