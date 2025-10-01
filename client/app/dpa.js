@@ -5,9 +5,8 @@ define([
     '/common/common-interface.js',
     '/common/common-icons.js',
     '/customize/messages.js',
-    '/customize/lucide.js',
     '/common/extensions.js'
-], ($, h, Util, UI, Icons, MessagesCP, Lucide, Extensions) => {
+], ($, h, Util, UI, Icons, MessagesCP, Extensions) => {
 
     let Messages = {};
     // Get translations from plugin
@@ -206,7 +205,6 @@ define([
                     redraw();
                 });
             });
-            Lucide.createIcons();
             $div.append([
                 showBtn,
                 dpaForm
@@ -323,7 +321,6 @@ define([
                 $(dpaBlock).hide();
                 $(showBtn).show();
             });
-            setTimeout(() => Lucide.createIcons());
             $div.append([
                 showBtn,
                 dpaBlock

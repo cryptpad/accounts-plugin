@@ -12,7 +12,6 @@ define([
     '/common/common-hash.js',
     '/common/common-icons.js',
     '/customize/messages.js',
-    '/customize/lucide.js',
     '/common/extensions.js',
     '/accounts/app/admin.js',
     '/accounts/app/dpa.js',
@@ -35,7 +34,6 @@ define([
     Hash,
     Icons,
     MessagesCP,
-    Lucide,
     Extensions,
     Admin,
     Dpa,
@@ -706,7 +704,6 @@ define([
         ]);
         const $content = $(content);
         $container.append(content);
-        Lucide.createIcons();
 
         Api.checkSession((err, val) => {
             if (err || !val) {
@@ -774,7 +771,6 @@ define([
             andThen();
             return void UI.removeLoadingScreen();
         }
-        setTimeout(() => Lucide.createIcons());
         nThen(waitFor => {
             sframeChan.query('ACCOUNTS_GET_KEYS', null, waitFor((err, keys) => {
                 if (err) {

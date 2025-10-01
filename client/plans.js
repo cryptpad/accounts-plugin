@@ -7,11 +7,10 @@ define([
     '/common/common-icons.js',
     '/customize/application_config.js',
     '/customize/messages.js',
-    '/customize/lucide.js',
     '/accounts/api.js',
     'json!/accounts/plans.json'
 ], ($, ApiConfig, h, UI, Util, Icons,
-    AppConfig, Messages, Lucide, Api, PlansJSON) => {
+    AppConfig, Messages, Api, PlansJSON) => {
     const Plans = {};
     let MyMessages = {};
     let sfCommon;
@@ -74,7 +73,6 @@ define([
     };
 
     const makeHeader = () => {
-        setTimeout(()=> Lucide.createIcons());
         return h('div.cp-accounts-header', [
             h('div.cp-accounts-header-group', [
                 h('div.cp-accounts-header-item', [
@@ -113,7 +111,6 @@ define([
         Util.onClickEnter($(button), () => {
             $('#cp-accounts-goto-mysub').click();
         });
-        Lucide.createIcons();
         return h('div.cp-accounts-yourplan', {
             'data-accounts-plan': plan
         }, [

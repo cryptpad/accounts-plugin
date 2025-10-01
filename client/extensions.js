@@ -7,11 +7,20 @@ define([
     '/common/outer/local-store.js',
     '/common/hyperscript.js',
     '/common/common-icons.js',
-    '/customize/messages.js',
-    '/customize/lucide.js',
-], function (ApiConfig, $, Plans, Util, UI, LocalStore, h, Icons, Messages, Lucide) {
+    '/customize/messages.js'
+], function (ApiConfig, $, Plans, Util, UI, LocalStore, h, Icons, Messages) {
     return function (MyMessages) {
         const extensions = {};
+
+        Icons.add({
+            "pricing": "circle-star",
+            "subscribe": "ticket",
+            "trophy": "trophy",
+            "credit-card": "credit-card",
+            "circle-left": "circle-chevron-left",
+            "notebook": "notepad-text",
+            "user": "user-round"
+        });
 
         extensions.TRANSLATIONS = [{
             get: (name) => {
@@ -191,7 +200,6 @@ define([
                 ]);
             }
         }];
-        Lucide.createIcons();
         return extensions;
     };
 });
