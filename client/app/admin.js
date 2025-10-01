@@ -7,9 +7,11 @@ define([
     '/common/common-ui-elements.js',
     '/accounts/app/dpa.js',
     '/accounts/app/stats.js',
-    '/customize/messages.js'
+    '/customize/messages.js',
+    '/customize/lucide.js',
+    '/common/common-icons.js',
 ], ($, h, Util, Clipboard, UI, UIElements,
-    Dpa, Stats, MessagesCP) => {
+    Dpa, Stats, MessagesCP, Lucide, Icons) => {
     const onAdminTab = Util.mkEvent();
 
 
@@ -45,7 +47,7 @@ const init = (APP, Plans, Api, Messages) => {
             $plan[0],
             beneficiary = h('input', {placeholder: "Beneficiary's key [{user}@{domain}/{key}]"}),
             note = h('input', {placeholder: "Note"}),
-            button = h('button.btn.btn-primary', "Give free subscription"),
+            button = h('button.btn.btn-primary', [Icons.get('add'), "Give free subscription"]),
         ]);
         $(button).on("click", () => {
             const key = $(beneficiary).val();
@@ -58,6 +60,7 @@ const init = (APP, Plans, Api, Messages) => {
             });
         });
         $div.append(admin);
+        Lucide.createIcons();
     };
 
     const getEditTab = ($div) => {
@@ -71,7 +74,7 @@ const init = (APP, Plans, Api, Messages) => {
         var getKeyInput = h('input.cp-admin-edit-fromkey', {
             type: 'text'
         });
-        var getFormSubmit = h('button.btn.btn-default', "Find subscription(s)");
+        var getFormSubmit = h('button.btn.btn-default', [Icons.get('search'), "Find subscription(s)"]);
         var getResult = h('div.cp-admin-edit-found');
         var getForm = h('div.cp-admin-edit-getform', [
             h('h3', "Get a subscription"),
@@ -92,6 +95,7 @@ const init = (APP, Plans, Api, Messages) => {
             getResult
         ]);
         $div.append(getForm);
+        Lucide.createIcons();
         var $getResult = $(getResult);
 
         // Create "edit" form
