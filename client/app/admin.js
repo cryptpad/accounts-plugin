@@ -8,10 +8,9 @@ define([
     '/accounts/app/dpa.js',
     '/accounts/app/stats.js',
     '/customize/messages.js',
-    '/customize/lucide.js',
     '/common/common-icons.js',
 ], ($, h, Util, Clipboard, UI, UIElements,
-    Dpa, Stats, MessagesCP, Lucide, Icons) => {
+    Dpa, Stats, MessagesCP, Icons) => {
     const onAdminTab = Util.mkEvent();
 
 
@@ -60,7 +59,6 @@ const init = (APP, Plans, Api, Messages) => {
             });
         });
         $div.append(admin);
-        Lucide.createIcons();
     };
 
     const getEditTab = ($div) => {
@@ -95,7 +93,6 @@ const init = (APP, Plans, Api, Messages) => {
             getResult
         ]);
         $div.append(getForm);
-        Lucide.createIcons();
         var $getResult = $(getResult);
 
         // Create "edit" form
@@ -162,7 +159,6 @@ const init = (APP, Plans, Api, Messages) => {
                     data.id = sub.id;
                     console.log(data);
                     $editForm.html('<i class="cp-spinner" data-lucide="loader"></i>');
-                    Lucide.createIcons();
                     Api.updateSubAdmin(data, function (err) {
                         if (err) {
                             var error = h('div.cp-admin-edit-error', err);
@@ -175,7 +171,6 @@ const init = (APP, Plans, Api, Messages) => {
 
             $(queryButton).click(function () {
                 $editForm.html('<i class="cp-spinner" data-lucide="loader"></i>');
-                Lucide.createIcons();
                 Api.stripeSync(sub.id, function (err) {
                     if (err) {
                         var error = h('div.cp-admin-edit-error', err);
@@ -346,7 +341,6 @@ const init = (APP, Plans, Api, Messages) => {
                 ['status', Messages['status_' + sub.status] || sub.status],
             ]).forEach(table.addCell(tr));
             table.$table.append(tr);
-            Lucide.createIcons();
         };
 
 
