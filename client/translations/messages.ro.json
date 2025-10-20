@@ -95,5 +95,6 @@
     "header_quota": "Încărcare de fișiere de până la 150MB",
     "plan_drives": "<strong>{0}</strong> Drive-ur (utilizatori sau echipe)",
     "paidYearly": "Facturat <strong>{0}€</strong> anual",
-    "plan_support": "Suport prioritar {{0}}"
+    "plan_support": "Suport prioritar {{0}}",
+    "cloud_feature1": "Complet gestionat sau servicii de suport după termenii tăi"
 }
