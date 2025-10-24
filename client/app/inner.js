@@ -400,13 +400,13 @@ define([
                     title: Messages.team_drive,
                     'aria-label': Messages.team_drive
                 });
-                const profile = Icons.get('user', {
+                const profile = h('span', Icons.get('user'), {
                     role: 'button',
                     tabindex: 0,
                     title: MessagesCP.profileButton,
                     'aria-label': MessagesCP.profileButton
                 });
-                const remove = Icons.get('close', {
+                const remove = h('span', Icons.get('close'), {
                     role: 'button',
                     tabindex: 0,
                     title: Messages.remove_label,
