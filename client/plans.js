@@ -8,9 +8,10 @@ define([
     '/customize/application_config.js',
     '/customize/messages.js',
     '/accounts/api.js',
+    '/components/marked/marked.min.js',
     'json!/accounts/plans.json'
 ], ($, ApiConfig, h, UI, Util, Icons,
-    AppConfig, Messages, Api, PlansJSON) => {
+    AppConfig, Messages, Api, Marked, PlansJSON) => {
     const Plans = {};
     let MyMessages = {};
     let sfCommon;
@@ -30,7 +31,6 @@ define([
         'trialing',
         'past_due'
     ];
-
 
     const makeToggle = () => {
         const monthly = h('span', MyMessages.billedMonthly);
@@ -349,7 +349,21 @@ define([
                 all.shift()
             ]));
         }
+
+        const customMsg = AppConfig.customAccountMsg;
+        const customHeader = h('div.cp-accounts-custom-msg');
+        if (!org && customMsg?.filter?.(myPlan)) {
+            Marked.setOptions({ sanitize: true });
+
+            const lang = Messages._getLanguage();
+            const text = customMsg.msg[lang] || customMsg.msg['default'];
+            const parsed = Marked.parse(text);
+            const content = UI.setHTML(h('div.alert.alert-info'), parsed);
+            customHeader.appendChild(content);
+        }
+
         return h('div.cp-accounts-list', [
+            customHeader,
             org ? makeOrgTitle() : makeToggle(),
             list
         ]);
