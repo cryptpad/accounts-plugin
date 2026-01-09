@@ -51,7 +51,6 @@ define([
 
         extensions.SUPPORT_SUBSCRIBE = [{
             getContent: (common) => {
-                let metadataMgr = common.getMetadataMgr();
                 const content = h('div.cp-support-subscribe.cp-sidebarlayout-element');
 
                 common.onAccountOnline(metadataMgr => {
