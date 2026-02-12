@@ -59,7 +59,15 @@ define([
     const findUserTeam = key => {
         const metadataMgr = common.getMetadataMgr();
         const privData = metadataMgr.getPrivateData();
-        const friends = common.getFriends(true);
+        const userData = metadataMgr.getUserData();
+        const friends = common.getFriends(true) || {};
+        if (!friends.me) {
+            friends.me = {
+                name: userData.name,
+                avatar: userData.avatar,
+                edPublic: userData.edPublic
+            };
+        }
         const teams = privData.teams;
         return Object.values(friends).find(obj => {
             return obj.edPublic === key;
