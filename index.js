@@ -80,25 +80,28 @@ const getJSON = cb => {
 
 };
 
-Accounts.addHttpEndpoints = (Env, app) => {
-    let dir = Path.join(__dirname, 'client');
-    app.get('/accounts/plans.json', (req, res) => {
-        res.setHeader('Content-Type', 'application/json');
-        getJSON((err, json) => {
-            if (err || !json) {
-                return void res.status(404).send();
-            }
-            res.send(json);
+Accounts.httpEndpoints = [{
+    type: 'http',
+    f: (Env, app) => {
+        let dir = Path.join(__dirname, 'client');
+        app.get('/accounts/plans.json', (req, res) => {
+            res.setHeader('Content-Type', 'application/json');
+            getJSON((err, json) => {
+                if (err || !json) {
+                    return void res.status(404).send();
+                }
+                res.send(json);
+            });
         });
-    });
-    app.use('/accounts', Express.static(dir));
+        app.use('/accounts', Express.static(dir));
 
 
-    getJSON((err, value) => {
-        if (err) {}
-        json = value;
-    });
-};
+        getJSON((err, value) => {
+            if (err) {}
+            json = value;
+        });
+    }
+}];
 
 Accounts.customizeEnv = Env => {
     Env.accounts_api = config?.accountsOrigin;
