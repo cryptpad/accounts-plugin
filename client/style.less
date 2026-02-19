@@ -36,6 +36,22 @@ body {
             justify-content: center;
             gap: 0px;
         }
+        .cp-accounts-custom-msg:empty {
+            display: none;
+        }
+        .cp-accounts-custom-msg {
+            flex-basis: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            div.alert.alert-info {
+                font-size: @colortheme_app-font-size;
+                max-width: 600px;
+                *:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
         .cp-accounts-yearly-toggle {
             flex-basis: 100%;
             display: flex;

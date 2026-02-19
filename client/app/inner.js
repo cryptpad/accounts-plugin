@@ -393,28 +393,28 @@ define([
         const makeEntry = (key, subId, _name) => {
             const privData = metadataMgr.getPrivateData();
             if (key) {
-                const userData = findUserTeam(key) || {
-                    name: _name
-                };
+                const isMe = key === privData.edPublic;
+
+                const userData = isMe ? metadataMgr.getUserData() :
+                    (findUserTeam(key) || { name: _name });
 
                 const avatar = h('div.cp-avatar');
                 const $avatar = $(avatar);
                 const name = userData.name || userData.displayName;
                 common.displayAvatar($avatar, userData.avatar, name);
 
-                const isMe = key === privData.edPublic;
 
                 const teamIcon = Icons.get('users', {
                     title: Messages.team_drive,
                     'aria-label': Messages.team_drive
                 });
-                const profile = Icons.get('user', {
+                const profile = h('span', Icons.get('user'), {
                     role: 'button',
                     tabindex: 0,
                     title: MessagesCP.profileButton,
                     'aria-label': MessagesCP.profileButton
                 });
-                const remove = Icons.get('close', {
+                const remove = h('span', Icons.get('close'), {
                     role: 'button',
                     tabindex: 0,
                     title: Messages.remove_label,

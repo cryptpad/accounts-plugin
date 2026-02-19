@@ -51,24 +51,29 @@ define([
 
         extensions.SUPPORT_SUBSCRIBE = [{
             getContent: (common) => {
-                let plan = common.getMetadataMgr()?.getPrivateData()?.plan;
-                if (plan) { return; }
-                var url = '/accounts';
-                var accountsLink = h('a', {
-                    href: url,
-                }, Messages.support_premiumLink);
-                $(accountsLink).click(function (ev) {
-                    ev.preventDefault();
-                    common.openURL(url);
-                });
+                const content = h('div.cp-support-subscribe.cp-sidebarlayout-element');
 
-                return h('div.cp-support-subscribe.cp-sidebarlayout-element', [
-                    h('div.alert.alert-info', [
+                common.onAccountOnline(metadataMgr => {
+                    let plan = metadataMgr.getPrivateData()?.plan;
+                    if (plan) { return content.remove(); }
+                    var url = '/accounts';
+                    var accountsLink = h('a', {
+                        href: url,
+                    }, Messages.support_premiumLink);
+                    $(accountsLink).click(function (ev) {
+                        ev.preventDefault();
+                        common.openURL(url);
+                    });
+
+                    const value = h('div.alert.alert-info', [
                         Messages.support_premiumPriority,
                         ' ',
                         accountsLink,
-                    ]),
-                ]);
+                    ]);
+                    content.appendChild(value);
+                });
+
+                return content;
             }
         }];
 
