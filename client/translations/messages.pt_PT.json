@@ -5,5 +5,9 @@
     "billedYearly": "Anual",
     "link_name": "Subscrição",
     "processing": "Em processamento",
-    "yourPlan": "A sua subscrição"
+    "yourPlan": "A sua subscrição",
+    "pickPlan": "Escolha esta subscrição",
+    "accountsPage": "Subscrição",
+    "admin_subsTab": "Subscrições",
+    "stripe_manage": "Gerenciar conta"
 }
