@@ -1,1 +1,9 @@
-{}
+{
+    "powertitle": "EQUIPA",
+    "price": "{0}€",
+    "billedMonthly": "Mensal",
+    "billedYearly": "Anual",
+    "link_name": "Subscrição",
+    "processing": "Em processamento",
+    "yourPlan": "A sua subscrição"
+}
