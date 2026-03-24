@@ -105,7 +105,7 @@
     "drive_add": "määritä {0} yhteystieto tai {1} tiimi",
     "from_contacts": "Yhteystiedoistasi",
     "from_key": "Julkisesta avaimesta",
-    "add_contact": "Valitse yhteystieto tai tiimi lisätäksesi heidän asemansa pakettiisi ja jakamaan tallennustilaa.",
+    "add_contact": "Valitse yhteyshenkilö tai tiimi lisätäksesi heidän asemansa pakettiisi ja jakamaan tallennustilaa.",
     "add_from_key": "Lisää käyttäjän tai tiimin julkinen avain lisätäksesi heidän asemansa pakettiisi ja jakamaan tallennustilaa.",
     "public_key": "Tiimin tai käyttäjän julkinen avain",
     "add_key": "Lisää valittu avain",
