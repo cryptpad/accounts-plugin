@@ -9,5 +9,14 @@
     "pickPlan": "Escolha esta subscrição",
     "accountsPage": "Subscrição",
     "admin_subsTab": "Subscrições",
-    "stripe_manage": "Gerenciar conta"
+    "stripe_manage": "Gerenciar conta",
+    "admin_editTab": "Editar as subscrições",
+    "unknown": "Utilizador/a desconhecido/a",
+    "drivesNumber": "{0} de {1}",
+    "stripe_renew": "Renovar subscrição",
+    "mysub_quota": "Limite de armazenamento: {0}",
+    "pricePerMonth": "{0}€/mês",
+    "pricePerYear": "{0}€/ano",
+    "perMonthVAT": "por mês (IVA excluído)",
+    "price_monthly": "{0}€ por mês"
 }
