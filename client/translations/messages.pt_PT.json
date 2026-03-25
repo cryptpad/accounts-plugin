@@ -52,5 +52,16 @@
     "stats_newSubsCancelled": "Canceladas a partir deste mês",
     "stats_monthlyRevenue": "Receita mensal das subscrições ",
     "stats_yearlyRevenue": "Receita anual das subscrições ",
-    "stats_note": "(*) Receita estimada caso ninguém cancele antes da renovação mensal e ninguém subscreva"
+    "stats_note": "(*) Receita estimada caso ninguém cancele antes da renovação mensal e ninguém subscreva",
+    "plan": "Plano",
+    "cancel": "Cancelar subscrição",
+    "dpa_language": "Língua do DPA",
+    "dpa_deleteSigned": "Eliminar DPA assinado",
+    "dpa_delete": "Eliminar DPA",
+    "dpa_wrongType": "Erro: o DPA assinado deve ser um ficheiro PDF",
+    "dpa_title": "Acordo de Tratamento de Dados Pessoais (DPA)",
+    "dpa_create": "Criar DPA",
+    "dpa_sendSigned": "Entregar DPA assinado",
+    "dpa_download": "Descarregar DPA",
+    "dpa_downloadUnsigned": "Descarregar DPA por assinar"
 }
