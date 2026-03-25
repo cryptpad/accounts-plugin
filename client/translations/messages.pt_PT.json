@@ -46,5 +46,11 @@
     "cloudtitle": "CryptPad Cloud",
     "tryCloud": "Experimente CryptPad Cloud",
     "show_active_only": "Mostrar só as subscrições ativas",
-    "show_inactive_only": "Mostrar só subscrições canceladas"
+    "show_inactive_only": "Mostrar só subscrições canceladas",
+    "stats_thisMonth": "Este mês*",
+    "stats_subsCancelled": "Canceladas este mês",
+    "stats_newSubsCancelled": "Canceladas a partir deste mês",
+    "stats_monthlyRevenue": "Receita mensal das subscrições ",
+    "stats_yearlyRevenue": "Receita anual das subscrições ",
+    "stats_note": "(*) Receita estimada caso ninguém cancele antes da renovação mensal e ninguém subscreva"
 }
