@@ -87,5 +87,6 @@
     "stats_revenue_y": "Das subscrições anuais",
     "orgtitle": "Org {0} Utilizadores",
     "org_title": "Planos para organizações",
-    "plan_drives": "<strong>{0}</strong> Drives (utilizador ou equipa)"
+    "plan_drives": "<strong>{0}</strong> Drives (utilizador ou equipa)",
+    "mysub_used": "Usado: {0} ({1}%)"
 }
