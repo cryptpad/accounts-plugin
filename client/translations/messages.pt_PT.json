@@ -88,5 +88,11 @@
     "orgtitle": "Org {0} Utilizadores",
     "org_title": "Planos para organizações",
     "plan_drives": "<strong>{0}</strong> Drives (utilizador ou equipa)",
-    "mysub_used": "Usado: {0} ({1}%)"
+    "mysub_used": "Usado: {0} ({1}%)",
+    "dpa_check": "Por favor, certifique-se de que as informações inseridas estão corretas",
+    "dpa_inval": "Por favor, preencha todos os campos",
+    "dpa_located": "Localização (país, cidade)",
+    "dpa_loc2_placeholder": "Código postal, cidade, país",
+    "dpa_loc1_placeholder": "Rua e número",
+    "dpa_identification": "Informação de identificação (tipo e número de inscrição)"
 }
