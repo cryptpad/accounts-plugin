@@ -11,7 +11,7 @@
     "admin_subsTab": "Subscrições",
     "stripe_manage": "Gerenciar conta",
     "admin_editTab": "Editar as subscrições",
-    "unknown": "Utilizador/a desconhecido/a",
+    "unknown": "Utilizador desconhecido",
     "drivesNumber": "{0} de {1}",
     "stripe_renew": "Renovar subscrição",
     "mysub_quota": "Limite de armazenamento: {0}",
@@ -63,5 +63,11 @@
     "dpa_create": "Criar DPA",
     "dpa_sendSigned": "Entregar DPA assinado",
     "dpa_download": "Descarregar DPA",
-    "dpa_downloadUnsigned": "Descarregar DPA por assinar"
+    "dpa_downloadUnsigned": "Descarregar DPA por assinar",
+    "gift_note": "Mensagem (opcional)",
+    "protitle": "Duo",
+    "basictitle": "PESSOAL",
+    "yourPlanIs": "O seu plano: {0}",
+    "goto_plans": "Ver todos os planos disponíveis",
+    "renews": "Renovações: {0}"
 }
