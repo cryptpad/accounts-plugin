@@ -127,6 +127,6 @@
     "paidYearly": "<strong>{0}€</strong> cobrados por ano",
     "cloud_feature1": "Gestão completa ou suporte segundo os seus termos",
     "noPlan": "Continua de graça",
-    "quota_error": "A sua subscrição não corresponde ao limite de armazenamento neste exemplo CryptPad. Contacte o suporte se o limite de armazenamento não for atualizado automaticamente dentro de uma hora.",
+    "quota_error": "A sua subscrição não corresponde ao limite de armazenamento nesta instância do CryptPad. Contacte o suporte se o limite de armazenamento não for atualizado automaticamente dentro de uma hora.",
     "dpa_certify": "Certifico que as informações inseridas estão corretas e correspondem à organização abrangida pela minha subscrição CryptPad."
 }
