@@ -5,6 +5,9 @@ const Https = require("node:https");
 const Http = require("node:http");
 const config = require('./config/config');
 
+const Nacl = require("tweetnacl/nacl-fast");
+const NaclUtil = require("tweetnacl-util");
+
 const loadJSON = _cb => {
     let cb = (err, value) => {
         _cb(err, value);
@@ -80,6 +83,32 @@ const getJSON = cb => {
 
 };
 
+const checkProof = (Env, proof) => {
+    if (!config.accountsSecret && !proof) { return true; }
+    if (!config.accountsSecret) { return false; }
+    if (!proof) { return false; }
+
+    const secretKey = NaclUtil.decodeBase64(config.accountsSecret);
+    const [ nonce64, message64 ] = proof.split('|');
+    if (!nonce64 || !message64) { return false; }
+
+    const encryptedMessage = NaclUtil.decodeBase64(message64);
+    const nonce = NaclUtil.decodeBase64(nonce64);
+
+    const message = Nacl.secretbox.open(encryptedMessage, nonce, secretKey);
+    if (!message) { return false; }
+
+    const str = NaclUtil.encodeUTF8(message);
+    try {
+        let json = JSON.parse(str);
+        let time = json.time;
+        const diff = Math.abs(+new Date() - time);
+        return diff < 10000; // Allow 10s offset
+    } catch (e) {
+        return false;
+    }
+};
+
 Accounts.addHttpEndpoints = (Env, app) => {
     let dir = Path.join(__dirname, 'client');
     app.get('/accounts/plans.json', (req, res) => {
@@ -93,6 +122,27 @@ Accounts.addHttpEndpoints = (Env, app) => {
     });
     app.use('/accounts', Express.static(dir));
 
+    app.post('/api/updatequota', function (req, res) {
+        if (!Env.accounts_api) {
+            res.status(404);
+            return void send404(res);
+        }
+
+        let body = req.body;
+        const proof = body?.auth;
+        const check = checkProof(Env, proof);
+        if (!check) { return res.status(200).send(); }
+
+        Env.sendMessage({
+            command: 'UPDATE_QUOTA',
+        }, (err) => {
+            if (err) {
+                res.status(500);
+                return void send500(res);
+            }
+            res.status(200).send();
+        });
+    });
 
     getJSON((err, value) => {
         if (err) {}

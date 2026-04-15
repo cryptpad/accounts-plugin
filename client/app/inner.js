@@ -314,15 +314,13 @@ define([
                 }
                 if (data.plan !== planId) {
                     const error = h('div.alert.alert-danger', Messages.quota_error);
-                    fetch(`${APP.origin}/api/updatequota`).then(r => {
-                        if (r.status === 200) {
-                            return void updateBar();
+                    Api.updateQuota((err) => {
+                        if (err) {
+                            console.error(err);
+                            used.appendChild(error);
+                            return;
                         }
-                        console.error(r.status, r);
-                        used.appendChild(error);
-                    }).catch(err => {
-                        console.error(err);
-                        used.appendChild(error);
+                        updateBar();
                     });
                     return;
                 }
