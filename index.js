@@ -80,6 +80,33 @@ const getJSON = cb => {
 
 };
 
+const checkProof = (Env, proof) => {
+    if (!config.accountsSecret && !proof) { return true; }
+    if (!config.accountsSecret) { return false; }
+    if (!proof) { return false; }
+
+    const CpCrypto = Env.modules.CpCrypto;
+    const secretKey = CpCrypto.decodeBase64(config.accountsSecret);
+    const [ nonce64, message64 ] = proof.split('|');
+    if (!nonce64 || !message64) { return false; }
+
+    const encryptedMessage = CpCrypto.decodeBase64(message64);
+    const nonce = CpCrypto.decodeBase64(nonce64);
+
+    const message = CpCrypto.secretboxOpen(encryptedMessage, nonce, secretKey);
+    if (!message) { return false; }
+
+    const str = CpCrypto.encodeUTF8(message);
+    try {
+        let json = JSON.parse(str);
+        let time = json?.time || 0;
+        const diff = Math.abs(+new Date() - time);
+        return diff < 10000; // Allow 10s offset
+    } catch (e) {
+        return false;
+    }
+};
+
 Accounts.httpEndpoints = [{
     type: 'http',
     f: (Env, app) => {
@@ -99,6 +126,19 @@ Accounts.httpEndpoints = [{
         getJSON((err, value) => {
             if (err) {}
             json = value;
+        });
+    }
+}, {
+    type: 'storage',
+    f: (Env, app) => {
+        app.post('/api/updatequota', (req, res) => {
+            let body = req.body;
+            const proof = body?.auth;
+            const check = checkProof(Env, proof);
+            if (check) {
+                Env.updateLimits();
+            }
+            res.status(200).send();
         });
     }
 }];

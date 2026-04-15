@@ -2,6 +2,9 @@ module.exports = {
     // Origin of your CryptPad accounts server
     accountsOrigin: "https://example.tld",
 
+    // Secret key used to authenticate queries between the servers
+    accountsSecret: '',
+
     /**
      * IF you use a complex CryptPad setup with a different backend/API server,
      * you must specify a subdomain or your main CryptPad domain for this API server.

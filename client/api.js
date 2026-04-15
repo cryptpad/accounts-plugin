@@ -41,6 +41,12 @@ const factory = (Util, Commands) => {
         });
     };
 
+    Api.updateQuota = cb => {
+        post({
+            command: 'UPDATE_QUOTA'
+        }, cb);
+    };
+
     Api.checkSession = (cb) => {
         post({
             command: 'CHECK_SESSION',
