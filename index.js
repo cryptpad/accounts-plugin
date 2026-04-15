@@ -5,9 +5,6 @@ const Https = require("node:https");
 const Http = require("node:http");
 const config = require('./config/config');
 
-const Nacl = require("tweetnacl/nacl-fast");
-const NaclUtil = require("tweetnacl-util");
-
 const loadJSON = _cb => {
     let cb = (err, value) => {
         _cb(err, value);
