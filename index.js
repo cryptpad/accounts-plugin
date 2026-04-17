@@ -131,7 +131,7 @@ Accounts.httpEndpoints = [{
 }, {
     type: 'storage',
     f: (Env, app) => {
-        app.post('/api/updatequota', (req, res) => {
+        app.post('/api/updatequota', Express.json(), (req, res) => {
             let body = req.body;
             const proof = body?.auth;
             const check = checkProof(Env, proof);
