@@ -1,1 +1,19 @@
-{}
+{
+    "protitle": "Duo",
+    "powertitle": "EQUIP",
+    "basictitle": "PERSONAL",
+    "price": "{0} €",
+    "yourPlan": "El vostre pla",
+    "pickPlan": "Tria aquest pla",
+    "buttons_donate": "Donació",
+    "billedMonthly": "Mensual",
+    "billedYearly": "Anual",
+    "link_name": "Subscripció",
+    "processing": "S'està processant",
+    "processing_wait": "Gràcies pel suport! Espereu mentre processem la vostra subscripció.",
+    "processing_error": "Alguna cosa ha anat malament mentre processàvem la vostra subscripció",
+    "processing_error_details": "Si la quota del vostre compte no s'actualitza de manera automàtica en la pròxima hora, contacteu amb l'assistència en <a href=\"mailto:billing@cryptpad.fr\">billing@cryptpad.fr</a>.",
+    "stripe_manage": "Gestiona el compte",
+    "accountsPage": "Subscripció",
+    "gift_note": "Nota del regal (opcional)"
+}
