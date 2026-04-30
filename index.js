@@ -124,8 +124,7 @@ Accounts.addHttpEndpoints = (Env, app) => {
 
     app.post('/api/updatequota', function (req, res) {
         if (!Env.accounts_api) {
-            res.status(404);
-            return void send404(res);
+            return res.status(404).send();
         }
 
         let body = req.body;
@@ -137,8 +136,7 @@ Accounts.addHttpEndpoints = (Env, app) => {
             command: 'UPDATE_QUOTA',
         }, (err) => {
             if (err) {
-                res.status(500);
-                return void send500(res);
+                return res.status(500).send();
             }
             res.status(200).send();
         });
