@@ -1,1 +1,26 @@
-{}
+{
+    "basictitle": "Personlig",
+    "buttons_donate": "Doner",
+    "billedMonthly": "Månedlig",
+    "link_name": "Abonnement",
+    "processing": "Behandler",
+    "processing_error": "Noe gikk feil når vi behandlet ditt abonnement",
+    "stripe_manage": "Administrer konto",
+    "accountsPage": "Abonnement",
+    "gift_note": "Gave kommentar",
+    "cancel": "Avslutt abonnement",
+    "admin_subsTab": "Abonnementer",
+    "admin_statsTab": "Statistikk",
+    "admin_editTab": "Rediger abonnementer",
+    "dpa_title": "Databehandleravtale (DBA)",
+    "powertitle": "Team",
+    "price": "{0}kr",
+    "yourPlan": "Ditt abonnement",
+    "pickPlan": "Velg dette abonnementet",
+    "billedYearly": "Årlig",
+    "gift_note_label": "Legg til en personlig beskjed til mottakeren.",
+    "processing_wait": "Takk for din støtte! Vennligst vent mens vi behandler ditt abonnement.",
+    "processing_error_details": "Hvis ikke din konto er automatisk oppdatert i løpet av den neste timen, vennligst kontakt support på <a href=\"mailto:billing@cryptpad.fr\">billing@cryptpad.fr</a>.",
+    "dpa_link": "Organisasjonsabonnementer inneholder en <b>Databehandleravtale</b>. <a href=\"{0}\" target=\"_blank\">Se forhåndsversjon</a> og generer en personlig versjon når du har abonnert.",
+    "dpa_signed": "En DBA er signert for dette abonnementet. Du kan laste den ned ved å trykke på knappen under. Vennligst kontakt oss via våre <a href=\"{0}\">Support sider</a> hvis du ønsker å oppdatere din organisasjons informasjon."
+}

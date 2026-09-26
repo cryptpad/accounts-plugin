@@ -77,5 +77,9 @@
     "closeDetails": "Cerrar",
     "billedYearly": "Anual",
     "billedMonthly": "Mensual",
-    "stripe_manage": "Gestionar cuenta"
+    "stripe_manage": "Gestionar cuenta",
+    "link_name": "Suscripción",
+    "freetitle": "Libre",
+    "org_title": "Planes de organización",
+    "header_drive": "Almacenamiento flexible con discos de usuario y equipo"
 }

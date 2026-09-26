@@ -77,5 +77,8 @@
     "dpa_downloadError": "Ocorreu um erro durante o download do DPA. Tente novamente e se o problema persistir entre em contato com o suporte.",
     "dpa_info": "Com seu plano de Organização CryptPad, você pode gerar um Contrato de Processamento de Dados (DPA). Este DPA estará ativo assim que for assinado por sua organização e devolvido para nós.",
     "dpa_check": "Certifique-se de que as informações inseridas são precisas",
-    "dpa_certify": "Certifico que as informações inseridas são precisas e correspondem à organização em questão pela minha assinatura do CryptPad."
+    "dpa_certify": "Certifico que as informações inseridas são precisas e correspondem à organização em questão pela minha assinatura do CryptPad.",
+    "freetitle": "Free",
+    "header_quota": "Upload de arquivos de até 150 MB",
+    "header_support": "Suporte prioritário em inglês e francês"
 }

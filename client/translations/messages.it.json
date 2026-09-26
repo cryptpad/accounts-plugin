@@ -124,5 +124,9 @@
     "plan_drives": "<strong>{0}</strong> Drive (utente o di gruppo)",
     "quota_error": "Il tuo abbonamento non corrisponde al limite dello spazio di archiviazione di questa istanza di CryptPad. Se il limite dello spazio di archiviazione non viene aggiornato automaticamente entro la prossima ora, contatta l'assistenza.",
     "cloud_feature4": "Assistenza per gli amministratori e le amministratrici",
-    "processing_success": "Il tuo abbonamento è stato attivato con successo. Grazie per il sostegno!"
+    "processing_success": "Il tuo abbonamento è stato attivato con successo. Grazie per il sostegno!",
+    "show_admin_only": "Mostra solo i regali degli amministratori o delle amministratrici",
+    "from_key": "Da chiave pubblica",
+    "drive_add": "associa un {0} contatto o un {1} gruppo",
+    "cloud_feature1": "Interamente gestita o con supporto a scelta"
 }
