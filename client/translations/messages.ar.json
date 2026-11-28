@@ -1,5 +1,12 @@
 {
     "buttons_donate": "تبرع",
     "admin_subsTab": "الاشتراكات",
-    "admin_statsTab": "الإحصائيات"
+    "admin_statsTab": "الإحصائيات",
+    "billedMonthly": "شهري",
+    "billedYearly": "سنوي",
+    "link_name": "اشتراك",
+    "processing": "تجهيز",
+    "processing_wait": "شكرًا على الدعم! يرجى الانتظار بينما نجهّز اشتراكك.",
+    "processing_error": "حصل خطأ ما أثناء تجهيز اشتراكك",
+    "powertitle": "فريق"
 }

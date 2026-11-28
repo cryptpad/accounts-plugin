@@ -128,5 +128,7 @@
     "show_admin_only": "Nur Geschenke von Administratoren anzeigen",
     "goto_plans": "Alle verfügbaren Pläne ansehen",
     "org_title": "Für Organisationen",
-    "add_contact": "Wähle einen Kontakt oder ein Team aus, um das Drive zu deinem Abonnement hinzuzufügen und Speicherplatz zu teilen."
+    "add_contact": "Wähle einen Kontakt oder ein Team aus, um das Drive zu deinem Abonnement hinzuzufügen und Speicherplatz zu teilen.",
+    "removeCardConfirm": "Du bist dabei, deine Zahlungsmethode zu entfernen. Dadurch wird dein Abonnement nicht gekündigt. Vor der Verlängerung kannst du eine neue Zahlungsmethode hinzufügen. Bist du sicher?",
+    "removeCard": "Zahlungsmethode entfernen"
 }
